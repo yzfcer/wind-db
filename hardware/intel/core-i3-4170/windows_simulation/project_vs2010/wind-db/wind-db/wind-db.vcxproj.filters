@@ -1,0 +1,91 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="dbcore">
+      <UniqueIdentifier>{f82b11c4-279f-4fca-950d-b61f1cd193a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="db_user">
+      <UniqueIdentifier>{e8e7df9e-7ecd-4aa1-9b48-ed091237e5a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="adapter">
+      <UniqueIdentifier>{e1bf9a04-2608-441e-ba7b-7aa65df26e34}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="comman">
+      <UniqueIdentifier>{857985c7-f0ef-4692-a671-795b5bedf0d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="main">
+      <UniqueIdentifier>{717ec82f-61cd-416c-bd0a-bc8ed29e20d4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="port">
+      <UniqueIdentifier>{b2c88949-d766-44ed-ab06-57e13c1f6dfd}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\dbcore\db_if.c">
+      <Filter>dbcore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\db_user\db_demo.c">
+      <Filter>db_user</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\port\db_port.c">
+      <Filter>port</Filter>
+    </ClCompile>
+    <ClCompile Include="main.c">
+      <Filter>main</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\comman\wind_string.c">
+      <Filter>comman</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\dbcore\db_entry.c">
+      <Filter>dbcore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_entry.c">
+      <Filter>dbcore</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\adapter\db_adapter.c">
+      <Filter>adapter</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\comman\wind_dlist.c">
+      <Filter>comman</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_if.h">
+      <Filter>dbcore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_private.h">
+      <Filter>dbcore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\db_user\db_demo.h">
+      <Filter>db_user</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\port\db_config.h">
+      <Filter>port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\port\db_port.h">
+      <Filter>port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\port\wind_type.h">
+      <Filter>port</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\comman\wind_string.h">
+      <Filter>comman</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_entry.h">
+      <Filter>dbcore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\dbcore\tb_entry.h">
+      <Filter>dbcore</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\adapter\db_adapter.h">
+      <Filter>adapter</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\comman\wind_dlist.h">
+      <Filter>comman</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
