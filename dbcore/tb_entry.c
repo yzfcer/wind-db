@@ -169,8 +169,96 @@ w_err_t table_entry_insert(char *tbname,void *data,w_int32_t datasize)
     return ERR_OK;
 }
 
+w_err_t table_entry_delete(char *tbname,w_int32_t row_idx)
+{
+    w_int32_t size;
+    tb_entry_s *entry;
+    dnode_s *dnode;
+    w_int32_t idx = 0;
+    WIND_ASSERT_RETURN(row_idx >= 0,ERR_INVALID_PARAM);
+    entry = table_entry_get_byname(tbname);
+    WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
+    foreach_node(dnode,&entry->data_list)
+    {
+        if(idx == row_idx)
+        {
+            dnode = dlist_remove(&entry->data_list,dnode);
+            db_free((void *)dnode);
+            return ERR_OK;
+        }
+    }
+    return ERR_COMMAN;
+}
+
+w_err_t table_entry_get_data(char *tbname,w_int32_t row_idx,void *data,w_int32_t data_size)
+{
+    w_int32_t size;
+    tb_entry_s *entry;
+    dnode_s *dnode;
+    w_int32_t idx = 0;
+    WIND_ASSERT_RETURN(row_idx >= 0,ERR_INVALID_PARAM);
+    entry = table_entry_get_byname(tbname);
+    WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(data_size == entry->data_size,ERR_INVALID_PARAM);
+    foreach_node(dnode,&entry->data_list)
+    {
+        if(idx == row_idx)
+        {
+            dnode = dlist_remove(&entry->data_list,dnode);
+            wind_memcpy(data,db_get_addr(dnode,sizeof(dnode_s)),entry->data_size);
+            return ERR_OK;
+        }
+    }
+    return ERR_COMMAN;
+}
+
+w_err_t table_entry_modify(char *tbname,w_int32_t row_idx,void *data,w_int32_t data_size)
+{
+    w_int32_t size;
+    tb_entry_s *entry;
+    dnode_s *dnode;
+    w_int32_t idx = 0;
+    WIND_ASSERT_RETURN(row_idx >= 0,ERR_INVALID_PARAM);
+    entry = table_entry_get_byname(tbname);
+    WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(data_size == entry->data_size,ERR_INVALID_PARAM);
+    foreach_node(dnode,&entry->data_list)
+    {
+        if(idx == row_idx)
+        {
+            dnode = dlist_remove(&entry->data_list,dnode);
+            wind_memcpy(db_get_addr(dnode,sizeof(dnode_s)),data,entry->data_size);
+            return ERR_OK;
+        }
+    }
+    return ERR_COMMAN;
+}
+w_err_t table_entry_query_count(char *tbname,w_int32_t *count)
+{
+    w_int32_t size;
+    tb_entry_s *entry;
+    dnode_s *dnode;
+    w_int32_t idx = 0;
+    entry = table_entry_get_byname(tbname);
+    WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    *count = entry->data_cnt;
+    return ERR_OK;
+}
 
 
+
+w_err_t table_entry_modify_value(char *tbname,char *mbrbname,w_int32_t row_idx,void *data,w_int32_t size)
+{
+    return ERR_COMMAN;
+}
+
+w_err_t table_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
+{
+    return ERR_COMMAN;
+}
 
 w_err_t table_print_data(char *tbname)
 {
