@@ -53,7 +53,7 @@ void create_tb_demo(void)
 	demo.k = 3;
 	wind_tb_insert("db1.tb1",&demo,sizeof(demo));
 
-	cnt = wind_tb_query_count("db1.tb1","",idx,10);
+	wind_tb_query_count("db1.tb1",&cnt);
 
 	wind_tb_getdata("db1.tb1",1,&demo);
 	demo.a[1] = 23;

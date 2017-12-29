@@ -150,8 +150,30 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
         psize[i] = item_info[i].size;
         pattr[i] = item_info[i].attr;
     }
-    dlist_insert_tail(&entry->db->tblist,&entry->tbnode);
+    //dlist_insert_tail(&entry->db->tblist,&entry->tbnode);
+    err = db_insert_tb(entry->db,entry);
+    WIND_ASSERT_RETURN(err == ERR_OK,ERR_COMMAN);
     return B_TRUE;
+}
+
+w_err_t table_entry_destroy(char *tbname)
+{
+    dnode_s *dnode;
+    w_err_t err;
+    tb_entry_s *entry;
+    //wind_printf("************ERROR**************\r\n");
+    entry = table_entry_get_byname(tbname);
+    WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(entry->db != NULL,ERR_NULL_POINTER);
+    err = db_remove_tb(entry->db,entry);
+    WIND_ASSERT_RETURN(err == ERR_OK,ERR_COMMAN);
+    foreach_node(dnode,&entry->data_list)
+    {
+        dnode = dlist_remove(&entry->data_list,dnode);
+        db_free((void *)dnode);
+    }
+    db_free((void *)entry);
+    return ERR_OK;
 }
 
 w_err_t table_entry_insert(char *tbname,void *data,w_int32_t datasize)
@@ -161,11 +183,13 @@ w_err_t table_entry_insert(char *tbname,void *data,w_int32_t datasize)
     dnode_s *dnode;
     entry = table_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(entry->data_cnt < 65535,ERR_COMMAN);
     size = sizeof(dnode_s) + entry->data_size;
     dnode = db_malloc(size);
     WIND_ASSERT_RETURN(dnode != 0,ERR_MEM);
     wind_memcpy(db_get_addr(dnode,sizeof(dnode_s)),data,entry->data_size);
     dlist_insert_tail(&entry->data_list,dnode);
+    entry->data_cnt ++;
     return ERR_OK;
 }
 
@@ -179,12 +203,14 @@ w_err_t table_entry_delete(char *tbname,w_int32_t row_idx)
     entry = table_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(entry->data_cnt > 0,ERR_COMMAN);
     foreach_node(dnode,&entry->data_list)
     {
         if(idx == row_idx)
         {
             dnode = dlist_remove(&entry->data_list,dnode);
             db_free((void *)dnode);
+            entry->data_cnt --;
             return ERR_OK;
         }
     }

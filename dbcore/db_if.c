@@ -21,7 +21,7 @@
 #include "db.h"
 #include "db_if.h"
 #include "db_entry.h"
-w_int32_t wind_db_create(char *dbname,w_int32_t size)
+w_int32_t wind_db_create(char *dbname)
 {
     db_create(dbname);
     return 0;
@@ -54,15 +54,17 @@ w_int32_t wind_tb_insert(char *tbname,void *row_data,w_int32_t row_size)
 
 w_int32_t wind_tb_delete(char *tbname,w_int32_t row_idx)
 {
-    return 0;
+    return table_entry_delete(tbname,row_idx);
 }
 
-w_int32_t wind_tb_get_row_index(char *tbname,char *mbrname)
+w_int32_t wind_tb_get_row_index(char * tbname,w_int32_t row_idx,void * data,w_int32_t data_size)
 {
-    return 0;
+    return table_entry_get_data(tbname,row_idx,data,data_size);
 }
+
 w_int32_t wind_tb_modify(char *tbname,w_int32_t tbindex,void *row_data,w_int32_t row_size)
 {
+    table_entry_modify(tbname,tbindex,row_data,row_size);
     return 0;
 }
 
@@ -71,12 +73,17 @@ w_int32_t wind_tb_modify_value(char *mbrbname,w_int32_t dataindex,void *data,w_i
     return 0;
 }
 
-w_int32_t wind_tb_query_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
+w_int32_t wind_tb_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
 {
-    return 0;
+    return table_entry_query_cond_count(tbname,cond,idxlist,cnt);
 }
-w_int32_t wind_tb_getdata(char *dbname,w_int32_t index,void *data)
+w_int32_t wind_tb_query_count(char *tbname,w_int32_t *count)
 {
-    return 0;
+    return table_entry_query_count(tbname,count);
+}
+
+w_int32_t wind_tb_getdata(char * tbname,w_int32_t row_idx,void * data,w_int32_t data_size)
+{
+    return table_entry_get_data(tbname,row_idx,data,data_size);
 }
 

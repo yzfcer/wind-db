@@ -9,6 +9,8 @@
 
 
 w_err_t table_entry_create(char *tbname,tb_item_info_s *info,w_int32_t item_cnt);
+w_err_t table_entry_destroy(char *tbname);
+
 w_err_t table_entry_insert(char *tbname,void *data,w_int32_t datasize);
 w_err_t table_entry_delete(char *tbname,w_int32_t row_idx);
 w_err_t table_entry_get_data(char *tbname,w_int32_t row_idx,void *data,w_int32_t data_size);
