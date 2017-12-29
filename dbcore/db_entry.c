@@ -117,7 +117,7 @@ w_err_t db_remove_tb(db_entry_s *db,tb_entry_s *tb)
 }
 
 
-w_err_t db_print(char *dbname)
+w_err_t db_print_info(char *dbname)
 {
     db_entry_s *entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);

@@ -30,10 +30,11 @@
 
 #ifdef _USE_USER_PRINT
 #include "wind_os_hwif.h"
+#include "wind_std.h"
 extern w_int32_t wind_std_output(w_uint8_t *str,w_int32_t len);
 w_int32_t wind_printf(const char *fmt, ...) 
 { 
-    static char sprint_buf[1024];
+    static char sprint_buf[512];
     va_list args; 
     w_int32_t n;
     wind_close_interrupt();
@@ -45,6 +46,7 @@ w_int32_t wind_printf(const char *fmt, ...)
     wind_open_interrupt();
     return n; 
 }
+
 #endif
 
 

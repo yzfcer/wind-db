@@ -30,7 +30,7 @@ w_int32_t wind_db_create(char *dbname)
 w_int32_t wind_db_distroy(char *dbname)
 {
     db_destroy(dbname);
-    db_print(dbname);
+    db_print_info(dbname);
     return 0;
 }
 
