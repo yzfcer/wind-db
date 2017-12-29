@@ -27,25 +27,11 @@
 #include "wind_type.h"
 #include "db.h"
 #include "wind_dlist.h"
+#include "tb_entry.h"
 #define DB_MAGIC 0xa5253867a16725b6
 
 
-typedef struct __db_entry_s db_entry_s;
-struct __db_entry_s
-{
-    w_uint64_t magic;
-    char name[DB_NAME_LEN];
-    dnode_s dbnode;
-    dlist_s tblist;
-    w_uint32_t base;//绝对地址
-    w_uint32_t next_offset;//下一个数据库的偏移地址
-    w_int32_t  dbsize;//DB的空间大小，字节为单位
-    w_uint16_t blk_cnt;//块数量
-    w_uint16_t blk_size;//块大小
-    w_uint16_t attr;
-    w_int32_t hash;
-    w_uint16_t map_offset;//块映射表偏移地址
-};
+
 
 #define DB_NEXT(dbinfo) (db_entry_s*)(dbinfo->base+dbinfo->next_offset)
 
@@ -55,6 +41,8 @@ w_err_t db_entry_create(char *dbname);
 w_err_t db_entry_destroy(char *dbname);
 w_err_t db_entry_setattr(char *dbname,w_uint16_t attr);
 w_err_t db_entry_getattr(char *dbname,w_uint16_t *attr);
+w_err_t db_entry_insert_tb(db_entry_s *db,tb_entry_s *tb);
+w_err_t db_entry_remove_tb(db_entry_s *db,tb_entry_s *tb);
 w_err_t db_entry_print(char *dbname);
 
 

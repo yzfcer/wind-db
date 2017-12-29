@@ -28,16 +28,25 @@ typedef struct
     w_uint16_t offset;
     w_uint16_t size;
     w_uint16_t attr;
-}db_item_info_s;
+}tb_item_info_s;
+
+typedef struct
+{
+    char *name;
+    w_uint16_t attr;
+    tb_item_info_s *tb_item;
+    w_int32_t item_cnt;
+}tb_param_s;
 
 //字段属性定义
-#define DB_ATTR_KEY (0x01<<0)//可读
-#define DB_ATTR_RD (0x01<<1)//可读
-#define DB_ATTR_WR (0x01<<2) //可写
-#define DB_ATTR_CRYPT (0x01<<3) //加密
-#define DB_ATTR_VISIBLE (0x01<<4) //可见
-#define DB_ATTR_NOT_NULL (0x01<<5) //不能空
-#define DB_ATTR_FLUSH (0x01<<6) //不能空
+#define DB_ATTR_KEY (0x0001<<0)//可读
+#define DB_ATTR_RD (0x0001<<1)//可读
+#define DB_ATTR_WR (0x0001<<2) //可写
+#define DB_ATTR_CRYPT (0x0001<<3) //加密
+#define DB_ATTR_VISIBLE (0x0001<<4) //可见
+#define DB_ATTR_NOT_NULL (0x0001<<5) //不能空
+#define DB_ATTR_FLUSH (0x0001<<6) //要刷盘
+#define DB_ATTR_SINGLE (0x0001<<7) //单条目
 
 #define DB_ATTR_KEY_ITEM (DB_ATTR_KEY  | DB_ATTR_RD | DB_ATTR_VISIBLE | DB_ATTR_NOT_NULL)//键值
 #define DB_ATTR_DEFAULT_ITEM (DB_ATTR_RD | DB_ATTR_WR | DB_ATTR_VISIBLE)//默认字段属性
@@ -47,23 +56,31 @@ typedef struct
 
 
 //判断属性是否满足
-#define TABLE_ATTR_EQ(attr,va) (((attr)&(va))==(va))
-#define TABLE_IS_KEY(attr) TABLE_ATTR_EQ((attr),DB_ATTR_KEY)
-#define TABLE_IS_RD(attr) TABLE_ATTR_EQ((attr),DB_ATTR_RD)
-#define TABLE_IS_WR(attr) TABLE_ATTR_EQ((attr),DB_ATTR_WR)
-#define TABLE_IS_CRYPT(attr) TABLE_ATTR_EQ((attr),DB_ATTR_CRYPT)
-#define TABLE_IS_VISIBLE(attr) TABLE_ATTR_EQ((attr),DB_ATTR_VISIBLE)
-#define TABLE_IS_NOT_NULL(attr) TABLE_ATTR_EQ((attr),DB_ATTR_NOT_NULL)
+#define DB_ATTR_EQ(attr,va) (((attr)&(va))==(va))
+#define DB_IS_KEY(attr) DB_ATTR_EQ((attr),DB_ATTR_KEY)
+#define DB_IS_RD(attr) DB_ATTR_EQ((attr),DB_ATTR_RD)
+#define DB_IS_WR(attr) DB_ATTR_EQ((attr),DB_ATTR_WR)
+#define DB_IS_CRYPT(attr) DB_ATTR_EQ((attr),DB_ATTR_CRYPT)
+#define DB_IS_VISIBLE(attr) DB_ATTR_EQ((attr),DB_ATTR_VISIBLE)
+#define DB_IS_NOT_NULL(attr) DB_ATTR_EQ((attr),DB_ATTR_NOT_NULL)
 
 
 //数据表定义
 #define TABLE_OFFSET(tb_type,mbr) (w_int32_t)(&(((tb_type*)0)->mbr))
-#define TABLE_DEF(tb_type) db_item_info_s db_info_list_##tb_type[] = {
-#define TABLE_DECLARE(tb_type) extern db_item_info_s db_info_list_##tb_type[];
+
+#define TABLE_START(tb_type) static tb_item_info_s db_info_list_##tb_type[] = {
 #define TABLE_ITEM(tb_type,mbr_type,mbr) {#mbr,TABLE_OFFSET(tb_type,mbr),sizeof(mbr_type),DB_ATTR_DEFAULT_ITEM},
 #define TABLE_ITEM_A(tb_type,mbr_type,mbr,tb_attr) {#mbr,TABLE_OFFSET(tb_type,mbr),sizeof(mbr_type),tb_attr},
 #define TABLE_END };
-#define TABLE_PARA(tb_type) #tb_type,db_info_list_##tb_type,sizeof(db_info_list_##tb_type)/sizeof(db_item_info_s)
+
+#define TABLE_DEF(tb_type,attr) \
+    tb_param_s tb_param_##tb_type = \
+    {#tb_type,attr,db_info_list_##tb_type,\
+    sizeof(db_info_list_##tb_type)/sizeof(tb_item_info_s)}; 
+
+#define TABLE_DECLARE(tb_type) extern tb_param_s tb_param_##tb_type;
+
+#define TABLE_PARA(tb_type) tb_param_##tb_type.tb_item,tb_param_##tb_type.item_cnt
 
 
 //数据库函数
@@ -71,7 +88,7 @@ w_int32_t wind_db_create(char *dbname,w_int32_t size);
 w_int32_t wind_db_distroy(char *dbname);
 
 //数据表函数,数据表名称格式为 dbname.tbname
-w_int32_t wind_tb_create(char *tbname,db_item_info_s *info,w_int32_t item_cnt);
+w_int32_t wind_tb_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cnt);
 w_int32_t wind_tb_distroy(char *tbname);
 
 //数据操作函数,

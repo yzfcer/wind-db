@@ -22,12 +22,13 @@
 #include "db_demo.h"
 //定义数据库结构
 
-TABLE_DEF(db_demo)
+TABLE_START(db_demo)
 TABLE_ITEM_A(db_demo,int,k,DB_ATTR_KEY_ITEM)
 TABLE_ITEM(db_demo,int,a)
 TABLE_ITEM(db_demo,char,b)
 TABLE_ITEM(db_demo,short,c)
 TABLE_END
+TABLE_DEF(db_demo,DB_ATTR_SINGLE)
 
 void create_tb_demo(void)
 {
@@ -44,20 +45,21 @@ void create_tb_demo(void)
     for (i = 0;i < 10;i ++)
         idx[i] = 0x12345670+i;
 	wind_db_create("db1",0x100000);
-	wind_tb_create("db1",TABLE_PARA(db_demo));
-	wind_tb_insert("db1.db_demo",&demo,sizeof(demo));
+    db_entry_print("db1");
+	wind_tb_create("db1.tb1",TABLE_PARA(db_demo));
+	wind_tb_insert("db1.tb1",&demo,sizeof(demo));
 	demo.k = 2;
-	wind_tb_insert("db1.db_demo",&demo,sizeof(demo));
+	wind_tb_insert("db1.tb1",&demo,sizeof(demo));
 	demo.k = 3;
-	wind_tb_insert("db1.db_demo",&demo,sizeof(demo));
+	wind_tb_insert("db1.tb1",&demo,sizeof(demo));
 
-	cnt = wind_tb_query_count("db1.db_demo","",idx,10);
+	cnt = wind_tb_query_count("db1.tb1","",idx,10);
 
-	wind_tb_getdata("db1.db_demo",1,&demo);
+	wind_tb_getdata("db1.tb1",1,&demo);
 	demo.a[1] = 23;
-	wind_tb_modify("db1.db_demo",1,&demo,sizeof(demo));
+	wind_tb_modify("db1.tb1",1,&demo,sizeof(demo));
 	
-	wind_tb_modify("db1.db_demo.c",2,&demo.c,sizeof(demo.c));
+	wind_tb_modify("db1.tb1",2,&demo.c,sizeof(demo.c));
 }
 
 

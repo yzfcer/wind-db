@@ -22,7 +22,9 @@
 **
 **------------------------------------------------------------------------------------------------------
 *******************************************************************************************************/
+#include "db.h"
 #include "db_entry.h"
+#include "tb_entry.h"
 #include "wind_string.h"
 #include "wind_debug.h"
 #include "db_adapter.h"
@@ -39,19 +41,15 @@ static w_int32_t get_db_hash(char *dbname)
     return hash;       
 }
 
-w_err_t db_entry_create(char *dbname,w_int32_t cnt)
+w_err_t db_entry_create(char *dbname)
 {
-    db_entry_s *entry = db_malloc(sizeof(db_entry_s));
+    db_entry_s *entry = (db_entry_s *)db_malloc(sizeof(db_entry_s));
     WIND_ASSERT_RETURN(entry != NULL,ERR_MEM);
     entry->magic = DB_MAGIC;
     wind_strncpy(entry->name,dbname,TB_NAME_LEN);
     DNODE_INIT(entry->dbnode);
     DLIST_INIT(entry->tblist);
     entry->base = (w_uint32_t)entry;
-    entry->next_offset = 0;
-    entry->dbsize = cnt * DB_BLK_SIZE;
-    entry->blk_cnt = cnt;
-    entry->blk_size = DB_BLK_SIZE;
     entry->hash = get_db_hash(entry->name);
     WIND_ASSERT_RETURN(entry->hash > 0,ERR_INVALID_PARAM);
     dlist_insert_tail(&db_list,&entry->dbnode);
@@ -100,16 +98,35 @@ w_err_t db_entry_getattr(char *dbname,w_uint16_t *attr)
     return ERR_OK;
 }
 
+w_err_t db_entry_insert_tb(db_entry_s *db,tb_entry_s *tb)
+{
+    WIND_ASSERT_RETURN(db != NULL,ERR_NULL_POINTER);
+    WIND_ASSERT_RETURN(tb != NULL,ERR_NULL_POINTER);
+    dlist_insert_tail(&db->tblist,&tb->tbnode);
+    db->tb_count ++;
+    return ERR_OK;
+}
+
+w_err_t db_entry_remove_tb(db_entry_s *db,tb_entry_s *tb)
+{
+    WIND_ASSERT_RETURN(db != NULL,ERR_NULL_POINTER);
+    WIND_ASSERT_RETURN(tb != NULL,ERR_NULL_POINTER);
+    dlist_remove(&db->tblist,&tb->tbnode);
+    db->tb_count --;
+    return ERR_OK;
+}
+
+
 w_err_t db_entry_print(char *dbname)
 {
     db_entry_s *entry = db_entry_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     wind_printf("db info:\r\n");
     wind_printf("db name:%s\r\n",entry->name);
-    wind_printf("db size:%d\r\n",entry->dbsize);
-    wind_printf("db block count:%d\r\n",entry->blk_cnt);
-    wind_printf("db block size:%d\r\n",entry->blk_size);
+    wind_printf("table count:%d\r\n",entry->tb_count);
 }
+
+
 
 
 

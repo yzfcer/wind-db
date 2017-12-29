@@ -3,33 +3,26 @@
 #include "db.h"
 #include "db_if.h"
 #include "wind_type.h"
+#include "db_adapter.h"
+#include "db_entry.h"
 
 
-#define TB_MAGIC 0xa527e397a167e268
 
+w_err_t table_entry_create(char *tbname,tb_item_info_s *info,w_int32_t item_cnt);
+w_err_t table_entry_insert(char *tbname,void *data,w_int32_t datasize);
+w_err_t table_entry_delete(char *tbname,w_int32_t row_idx);
 
-typedef struct
-{
-    w_uint64_t magic;
-    char dbname[DB_NAME_LEN];
-    char tbname[TB_NAME_LEN];
-    w_uint32_t base;//绝对地址
-    w_uint32_t entry_size;
-    w_uint16_t item_cnt;
-    //偏移地址
-    w_int16_t mbrname_offset;
-    w_int16_t offset_offset;
-    w_int16_t size_offset;
-    w_int16_t attr_offset;
-    w_int32_t data_offset;
-}table_entry_s;
-table_entry_s *table_entry_get_byname(char *tbname);
-w_bool_t table_entry_create(char *tbname,db_item_info_s *info,w_int32_t item_cnt);
-w_int32_t table_get_name_list(table_entry_s *tbentry,char**name);
-w_int32_t table_get_offset_list(table_entry_s *tbentry,w_int16_t **offset);
-w_int32_t table_get_size_list(table_entry_s *tbentry,w_int16_t **size);
-w_int32_t table_get_attr_list(table_entry_s *tbentry,w_int16_t **attr);
+w_int32_t wind_tb_delete(char *tbname,w_int32_t row_idx);
+w_int32_t wind_tb_get_row_index(char *tbname,char *mbrname);
+w_int32_t wind_tb_modify(char *tbname,w_int32_t tbindex,void *row_data,w_int32_t row_size);
 
+//数据字段名称格式为 dbname.tbname.mbrname
+w_int32_t wind_tb_modify_value(char *mbrbname,w_int32_t dataindex,void *data,w_int32_t size);
+//cond的格式为"mbrname1=value1&&mbr2=value2"类似的格式
+w_int32_t wind_tb_query_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt);
+w_int32_t wind_tb_getdata(char *dbname,w_int32_t index,void *data);
+
+w_err_t table_print_data(char *tbname);
 #endif
 
 
