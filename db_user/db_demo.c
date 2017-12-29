@@ -45,7 +45,7 @@ void create_tb_demo(void)
     for (i = 0;i < 10;i ++)
         idx[i] = 0x12345670+i;
 	wind_db_create("db1",0x100000);
-    db_entry_print("db1");
+    db_print("db1");
 	wind_tb_create("db1.tb1",TABLE_PARA(db_demo));
 	wind_tb_insert("db1.tb1",&demo,sizeof(demo));
 	demo.k = 2;

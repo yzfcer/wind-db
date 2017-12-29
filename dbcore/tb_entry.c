@@ -47,7 +47,7 @@ tb_entry_s *table_entry_get_byname_from_db(char *dbname,char *tbname)
     dnode_s *dnode;
     w_int32_t hash = get_tb_hash(tbname);
     WIND_ASSERT_RETURN(hash > 0,NULL);
-    dbentry = db_entry_get_byname(dbname);
+    dbentry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(dbentry != NULL,NULL);
     foreach_node(dnode,&dbentry->tblist)
     {
@@ -115,7 +115,7 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
     err = table_name_split(tbname,entry->dbname,entry->tbname);
     WIND_ASSERT_RETURN(err == ERR_OK,ERR_INVALID_PARAM);
     entry->base = (w_uint32_t)entry;
-    entry->db = db_entry_get_byname(entry->dbname);
+    entry->db = db_get_byname(entry->dbname);
     DNODE_INIT(entry->tbnode);
 
 
@@ -123,7 +123,6 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
     entry->item_cnt = item_cnt;
     entry->hash = get_tb_hash(entry->tbname);
 
-    
     DLIST_INIT(entry->data_list);
     entry->data_cnt = 0;
     entry->data_size = item_info[item_cnt-1].offset + item_info[item_cnt-1].size;

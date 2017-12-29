@@ -23,14 +23,14 @@
 #include "db_entry.h"
 w_int32_t wind_db_create(char *dbname,w_int32_t size)
 {
-    db_entry_create(dbname);
+    db_create(dbname);
     return 0;
 }
 
 w_int32_t wind_db_distroy(char *dbname)
 {
-    db_entry_destroy(dbname);
-    db_entry_print(dbname);
+    db_destroy(dbname);
+    db_print(dbname);
     return 0;
 }
 

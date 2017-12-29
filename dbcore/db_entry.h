@@ -36,14 +36,14 @@
 #define DB_NEXT(dbinfo) (db_entry_s*)(dbinfo->base+dbinfo->next_offset)
 
 //Êı¾İ¿âº¯Êı
-db_entry_s *db_entry_get_byname(char *dbname);
-w_err_t db_entry_create(char *dbname);
-w_err_t db_entry_destroy(char *dbname);
-w_err_t db_entry_setattr(char *dbname,w_uint16_t attr);
-w_err_t db_entry_getattr(char *dbname,w_uint16_t *attr);
-w_err_t db_entry_insert_tb(db_entry_s *db,tb_entry_s *tb);
-w_err_t db_entry_remove_tb(db_entry_s *db,tb_entry_s *tb);
-w_err_t db_entry_print(char *dbname);
+db_entry_s *db_get_byname(char *dbname);
+w_err_t db_create(char *dbname);
+w_err_t db_destroy(char *dbname);
+w_err_t db_setattr(char *dbname,w_uint16_t attr);
+w_err_t db_getattr(char *dbname,w_uint16_t *attr);
+w_err_t db_insert_tb(db_entry_s *db,tb_entry_s *tb);
+w_err_t db_remove_tb(db_entry_s *db,tb_entry_s *tb);
+w_err_t db_print(char *dbname);
 
 
 #endif
