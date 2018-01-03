@@ -62,6 +62,7 @@ void create_tb_demo(void)
 	wind_tb_modify("db1.tb1",1,&demo,sizeof(demo));
     db_print_info("db1");
 	table_entry_print_info("db1.tb1");
+    table_entry_print_data("db1.tb1");
 	//wind_tb_modify("db1.tb1",2,&demo.c,sizeof(demo.c));
 }
 

@@ -30,29 +30,6 @@ static w_err_t table_name_split(char *combine_name,char *dname,char *tname)
     return ERR_OK;
 }
 
-static w_int32_t table_get_name_list(tb_entry_s *tbentry,char**name)
-{
-    *name = db_get_addr(tbentry,tbentry->mbrname_offset);
-    return tbentry->item_cnt;
-}
-
-static w_int32_t table_get_offset_list(tb_entry_s *tbentry,w_int16_t *offset)
-{
-    *offset = db_get_addr(tbentry,tbentry->offset_offset);
-    return tbentry->item_cnt;
-}
-
-static w_int32_t table_get_size_list(tb_entry_s *tbentry,w_int16_t *size)
-{
-    *size = db_get_addr(tbentry,tbentry->size_offset);
-    return tbentry->item_cnt;
-}
-
-static w_int32_t table_get_attr_list(tb_entry_s *tbentry,w_int16_t *attr)
-{
-    *attr = db_get_addr(tbentry,tbentry->attr_offset);
-    return tbentry->item_cnt;
-}
 
 static w_int32_t get_table_entry_size(w_int32_t item_cnt)
 {
@@ -274,10 +251,11 @@ w_err_t table_entry_modify(char *tbname,w_int32_t row_idx,void *data,w_int32_t d
     {
         if(idx == row_idx)
         {
-            dnode = dlist_remove(&entry->data_list,dnode);
+            //dnode = dlist_remove(&entry->data_list,dnode);
             wind_memcpy(db_get_addr(dnode,sizeof(dnode_s)),data,entry->data_size);
             return ERR_OK;
         }
+        idx ++;
     }
     return ERR_COMMAN;
 }
@@ -324,16 +302,18 @@ w_err_t table_entry_print_info(char *tbname)
     wind_printf("attr   offset:%d\r\n",entry->attr_offset);
 }
 
-w_err_t table_print_data(char *tbname)
+w_err_t table_entry_print_data(char *tbname)
 {
-    char *name;
-    w_int32_t offset,count;
+    dnode_s *dnode;
+    w_uint8_t *data;
     tb_entry_s *entry = table_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
-    wind_printf("table=%s\r\n",entry->tbname);
-    table_get_name_list(entry,*name);
-    table_get_offset_list(entry,*name);
-    wind_error("printf here");
+    WIND_ASSERT_RETURN(entry->magic == TB_MAGIC,ERR_INVALID_PARAM);
+    foreach_node(dnode,&entry->data_list)
+    {
+        data = (w_uint8_t *)&dnode[1];
+        table_print_data(entry,data);
+    }
     return ERR_OK;
 }
 

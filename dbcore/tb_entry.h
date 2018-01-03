@@ -26,6 +26,8 @@ w_err_t table_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,
 
 w_err_t table_entry_print_info(char *tbname);
 w_err_t table_entry_print_data(char *tbname);
+void table_print_data(tb_entry_s *entry,w_uint8_t *data);
+
 #endif
 
 

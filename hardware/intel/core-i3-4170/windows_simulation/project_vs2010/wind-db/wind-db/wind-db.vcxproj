@@ -17,6 +17,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\dbcore\db_entry.c" />
     <ClCompile Include="..\..\..\..\..\..\..\dbcore\db_if.c" />
     <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_entry.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_print.c" />
     <ClCompile Include="..\..\..\..\..\..\..\db_user\db_demo.c" />
     <ClCompile Include="..\..\..\port\db_port.c" />
     <ClCompile Include="main.c" />
