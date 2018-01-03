@@ -97,10 +97,9 @@ void table_print_data(tb_entry_s *entry,w_uint8_t *data)
     psize = (w_uint16_t*)db_get_addr(entry,entry->size_offset);
     pattr = (w_uint16_t*)db_get_addr(entry,entry->attr_offset);
 
-    //w_int32_t count = count;
     for(i = 0;i < entry->item_cnt;i ++)
     {
-        wind_printf("%s=",&name_base[i*MBR_NAME_LEN]);
+        wind_printf("       <%s=",&name_base[i*MBR_NAME_LEN]);
         switch(type[i])
         {
             case TYPE_w_int8_t:
@@ -141,7 +140,7 @@ void table_print_data(tb_entry_s *entry,w_uint8_t *data)
                 wind_printf("undefined param type:%d\r\n",type[i]);
                 break;
         }
-        wind_printf("\r\n");
+        wind_printf("/>\r\n");
     }
 }
 

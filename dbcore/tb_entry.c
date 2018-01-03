@@ -304,16 +304,22 @@ w_err_t table_entry_print_info(char *tbname)
 
 w_err_t table_entry_print_data(char *tbname)
 {
+    w_int32_t idx = 0;
     dnode_s *dnode;
     w_uint8_t *data;
     tb_entry_s *entry = table_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->magic == TB_MAGIC,ERR_INVALID_PARAM);
+    wind_printf("<DB name=%s.%s>\r\n",entry->dbname,entry->tbname);
     foreach_node(dnode,&entry->data_list)
     {
         data = (w_uint8_t *)&dnode[1];
+        wind_printf("   <table index=%d>\r\n",idx);
         table_print_data(entry,data);
+        wind_printf("   </table index=%d>\r\n",idx);
+        idx ++;
     }
+    wind_printf("</DB name=%s.%s>\r\n",entry->dbname,entry->tbname);
     return ERR_OK;
 }
 
