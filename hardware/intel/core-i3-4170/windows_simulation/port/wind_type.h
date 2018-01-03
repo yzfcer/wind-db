@@ -5,18 +5,18 @@
 **
 **--------------文件信息--------------------------------------------------------------------------------
 **文   件   名: wind_type.h
-**创   建   人: 周江村
+**创   建   人: Jason Zhou
 **最后修改日期: 2012.09.26
 **描        述: wind os的类型定义
 **              
 **--------------历史版本信息----------------------------------------------------------------------------
-** 创建人: 周江村
+** 创建人: Jason Zhou
 ** 版  本: v1.0
 ** 日　期: 2012.09.26
 ** 描　述: 原始版本
 **
 **--------------当前版本修订----------------------------------------------------------------------------
-** 修改人: 周江村
+** 修改人: Jason Zhou
 ** 日　期: 2012.10.20
 ** 描　述: 
 **
@@ -70,9 +70,30 @@ typedef float w_fp64_t;
 #endif
 
 #ifndef w_addr_t
-typedef w_uint32_t w_addr_t;
+typedef unsigned long w_addr_t; 
 #endif
 
+
+#ifndef w_str16_t
+typedef char w_str16_t[16] ;
+#endif
+
+#ifndef w_str32_t
+typedef char w_str32_t[32] ;
+#endif
+
+
+#ifndef w_str64_t
+typedef char w_str64_t[64] ;
+#endif
+
+#ifndef w_str128_t
+typedef char w_str128_t[128] ;
+#endif
+
+#ifndef w_str256_t
+typedef char w_str256_t[256] ;
+#endif
 
 #ifndef __INLINE__
 #define __INLINE__ 

@@ -66,11 +66,13 @@ typedef struct
 
 
 //数据表定义
-#define TABLE_OFFSET(tb_type,mbr) (w_int32_t)(&(((tb_type*)0)->mbr))
+#define TB_OFFSET(tb_type,mbr) (w_int32_t)(&(((tb_type*)0)->mbr))
+#define TB_MBRSIZE(tb_type,mbr) (sizeof(((tb_type*)0)->mbr))
+#define TB_MBRCNT(tb_type,mbr_type,mbr) (sizeof(((tb_type*)0)->mbr)/sizeof(mbr_type))
 
 #define TABLE_START(tb_type) static tb_item_info_s db_info_list_##tb_type[] = {
-#define TABLE_ITEM(tb_type,mbr_type,mbr) {#mbr,TABLE_OFFSET(tb_type,mbr),sizeof(mbr_type),DB_ATTR_DEFAULT_ITEM},
-#define TABLE_ITEM_A(tb_type,mbr_type,mbr,tb_attr) {#mbr,TABLE_OFFSET(tb_type,mbr),sizeof(mbr_type),tb_attr},
+#define TABLE_ITEM(tb_type,mbr_type,mbr) {#mbr,TB_OFFSET(tb_type,mbr),sizeof(mbr_type),DB_ATTR_DEFAULT_ITEM},
+#define TABLE_ITEM_A(tb_type,mbr_type,mbr,tb_attr) {#mbr,TB_OFFSET(tb_type,mbr),sizeof(mbr_type),tb_attr},
 #define TABLE_END };
 
 #define TABLE_DEF(tb_type,attr) \
@@ -84,7 +86,7 @@ typedef struct
 
 
 //数据库函数
-w_int32_t wind_db_create(char *dbname);
+w_int32_t wind_db_create(char *dbname,w_uint16_t attr);
 w_int32_t wind_db_distroy(char *dbname);
 
 //数据表函数,数据表名称格式为 dbname.tbname

@@ -30,7 +30,31 @@ static w_err_t table_name_split(char *combine_name,char *dname,char *tname)
     return ERR_OK;
 }
 
-w_int32_t get_table_entry_size(w_int32_t item_cnt)
+static w_int32_t table_get_name_list(tb_entry_s *tbentry,char**name)
+{
+    *name = db_get_addr(tbentry,tbentry->mbrname_offset);
+    return tbentry->item_cnt;
+}
+
+static w_int32_t table_get_offset_list(tb_entry_s *tbentry,w_int16_t *offset)
+{
+    *offset = db_get_addr(tbentry,tbentry->offset_offset);
+    return tbentry->item_cnt;
+}
+
+static w_int32_t table_get_size_list(tb_entry_s *tbentry,w_int16_t *size)
+{
+    *size = db_get_addr(tbentry,tbentry->size_offset);
+    return tbentry->item_cnt;
+}
+
+static w_int32_t table_get_attr_list(tb_entry_s *tbentry,w_int16_t *attr)
+{
+    *attr = db_get_addr(tbentry,tbentry->attr_offset);
+    return tbentry->item_cnt;
+}
+
+static w_int32_t get_table_entry_size(w_int32_t item_cnt)
 {
     w_int32_t size = sizeof(tb_entry_s);
     size += MBR_NAME_LEN * item_cnt;//item name
@@ -72,29 +96,6 @@ tb_entry_s *table_entry_get_byname(char *combine_name)
     return table_entry_get_byname_from_db(dname,tname);
 }
 
-w_int32_t table_get_name_list(tb_entry_s *tbentry,char**name)
-{
-    *name = db_get_addr(tbentry,tbentry->mbrname_offset);
-    return tbentry->item_cnt;
-}
-
-w_int32_t table_get_offset_list(tb_entry_s *tbentry,w_int16_t **offset)
-{
-    *offset = db_get_addr(tbentry,tbentry->offset_offset);
-    return tbentry->item_cnt;
-}
-
-w_int32_t table_get_size_list(tb_entry_s *tbentry,w_int16_t **size)
-{
-    *size = db_get_addr(tbentry,tbentry->size_offset);
-    return tbentry->item_cnt;
-}
-
-w_int32_t table_get_attr_list(tb_entry_s *tbentry,w_int16_t **attr)
-{
-    *attr = db_get_addr(tbentry,tbentry->attr_offset);
-    return tbentry->item_cnt;
-}
 
 
 w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cnt)
@@ -227,7 +228,7 @@ w_err_t table_entry_get_data(char *tbname,w_int32_t row_idx,void *data,w_int32_t
     entry = table_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
-    WIND_ASSERT_RETURN(data_size == entry->data_size,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(data_size >= entry->data_size,ERR_INVALID_PARAM);
     foreach_node(dnode,&entry->data_list)
     {
         if(idx == row_idx)
@@ -250,7 +251,7 @@ w_err_t table_entry_modify(char *tbname,w_int32_t row_idx,void *data,w_int32_t d
     entry = table_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
-    WIND_ASSERT_RETURN(data_size == entry->data_size,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(data_size >= entry->data_size,ERR_INVALID_PARAM);
     foreach_node(dnode,&entry->data_list)
     {
         if(idx == row_idx)
@@ -274,8 +275,6 @@ w_err_t table_entry_query_count(char *tbname,w_int32_t *count)
     return ERR_OK;
 }
 
-
-
 w_err_t table_entry_modify_value(char *tbname,char *mbrbname,w_int32_t row_idx,void *data,w_int32_t size)
 {
     return ERR_COMMAN;
@@ -286,13 +285,30 @@ w_err_t table_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,
     return ERR_COMMAN;
 }
 
+w_err_t table_entry_print_info(char *tbname)
+{
+    tb_entry_s *entry = table_entry_get_byname(tbname);
+    WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    wind_printf("\r\ntable info:\r\n");
+    wind_printf("DB    name :%s\r\n",entry->dbname);
+    wind_printf("table name :%s\r\n",entry->tbname);
+    wind_printf("entry size :%d\r\n",entry->entry_size);
+    wind_printf("entry hash :%d\r\n",entry->hash);
+    wind_printf("item count :%d\r\n",entry->item_cnt);
+    wind_printf("data count :%d\r\n",entry->data_cnt);
+    wind_printf("data  size :%d\r\n",entry->data_size);
+}
+
 w_err_t table_print_data(char *tbname)
 {
     char *name;
+    w_int32_t offset,count;
     tb_entry_s *entry = table_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     wind_printf("table=%s\r\n",entry->tbname);
-    name = table_get_name_list(entry,*name);
-    
+    table_get_name_list(entry,*name);
+    table_get_offset_list(entry,*name);
+    wind_error("printf here");
+    return ERR_OK;
 }
 

@@ -21,9 +21,9 @@
 #include "db.h"
 #include "db_if.h"
 #include "db_entry.h"
-w_int32_t wind_db_create(char *dbname)
+w_int32_t wind_db_create(char *dbname,w_uint16_t attr)
 {
-    db_create(dbname);
+    db_create(dbname,attr);
     return 0;
 }
 

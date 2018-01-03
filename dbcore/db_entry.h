@@ -30,14 +30,11 @@
 #include "tb_entry.h"
 #define DB_MAGIC 0xa5253867a16725b6
 
-
-
-
 #define DB_NEXT(dbinfo) (db_entry_s*)(dbinfo->base+dbinfo->next_offset)
 
 //Êı¾İ¿âº¯Êı
 db_entry_s *db_get_byname(char *dbname);
-w_err_t db_create(char *dbname);
+w_err_t db_create(char *dbname,w_uint16_t attr);
 w_err_t db_destroy(char *dbname);
 w_err_t db_setattr(char *dbname,w_uint16_t attr);
 w_err_t db_getattr(char *dbname,w_uint16_t *attr);

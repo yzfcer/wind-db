@@ -44,7 +44,8 @@ void create_tb_demo(void)
 	demo.c = 4;
     for (i = 0;i < 10;i ++)
         idx[i] = 0x12345670+i;
-	wind_db_create("db1",0x100000);
+	wind_db_create("db1",DB_ATTR_RAMONLY);
+	//wind_db_create("db1",DB_ATTR_RAMONLY);
     db_print_info("db1");
 	wind_tb_create("db1.tb1",TABLE_PARA(db_demo));
 	wind_tb_insert("db1.tb1",&demo,sizeof(demo));
@@ -55,11 +56,12 @@ void create_tb_demo(void)
 
 	wind_tb_query_count("db1.tb1",&cnt);
 
-	wind_tb_getdata("db1.tb1",1,&demo);
+	wind_tb_getdata("db1.tb1",1,&demo,sizeof(demo));
 	demo.a[1] = 23;
 	wind_tb_modify("db1.tb1",1,&demo,sizeof(demo));
-	
-	wind_tb_modify("db1.tb1",2,&demo.c,sizeof(demo.c));
+    db_print_info("db1");
+	table_entry_print_info("db1.tb1");
+	//wind_tb_modify("db1.tb1",2,&demo.c,sizeof(demo.c));
 }
 
 

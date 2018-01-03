@@ -41,17 +41,24 @@ static w_int32_t get_db_hash(char *dbname)
     return hash;       
 }
 
-w_err_t db_create(char *dbname)
+
+
+w_err_t db_create(char *dbname,w_uint16_t attr)
 {
-    db_entry_s *entry = (db_entry_s *)db_malloc(sizeof(db_entry_s));
+    db_entry_s *entry;
+    entry = db_get_byname(dbname);
+    WIND_ASSERT_RETURN(entry == NULL,ERR_INVALID_PARAM);
+    entry = (db_entry_s *)db_malloc(sizeof(db_entry_s));
     WIND_ASSERT_RETURN(entry != NULL,ERR_MEM);
     entry->magic = DB_MAGIC;
     wind_strncpy(entry->name,dbname,TB_NAME_LEN);
     DNODE_INIT(entry->dbnode);
     DLIST_INIT(entry->tblist);
     entry->base = (w_uint32_t)entry;
+    entry->attr = attr;
     entry->hash = get_db_hash(entry->name);
     WIND_ASSERT_RETURN(entry->hash > 0,ERR_INVALID_PARAM);
+    entry->tb_count = 0;
     dlist_insert_tail(&db_list,&entry->dbnode);
     return B_TRUE;
 }
@@ -121,7 +128,7 @@ w_err_t db_print_info(char *dbname)
 {
     db_entry_s *entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
-    wind_printf("db info:\r\n");
+    wind_printf("\r\ndb info:\r\n");
     wind_printf("db name:%s\r\n",entry->name);
     wind_printf("table count:%d\r\n",entry->tb_count);
 }

@@ -24,6 +24,7 @@ w_err_t table_entry_modify_value(char *tbname,char *mbrbname,w_int32_t row_idx,v
 //cond的格式为"mbrname1=value1&&mbr2=value2"类似的格式
 w_err_t table_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt);
 
+w_err_t table_entry_print_info(char *tbname);
 w_err_t table_entry_print_data(char *tbname);
 #endif
 
