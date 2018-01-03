@@ -21,12 +21,15 @@
 #ifndef DB_IF_H__
 #define DB_IF_H__
 #include "wind_type.h"
+#include "db.h"
 
 typedef struct
 {
     char *name;
-    w_uint16_t offset;
+    w_uint8_t type;
+    w_uint8_t count;
     w_uint16_t size;
+    w_uint16_t offset;
     w_uint16_t attr;
 }tb_item_info_s;
 
@@ -71,8 +74,8 @@ typedef struct
 #define TB_MBRCNT(tb_type,mbr_type,mbr) (sizeof(((tb_type*)0)->mbr)/sizeof(mbr_type))
 
 #define TABLE_START(tb_type) static tb_item_info_s db_info_list_##tb_type[] = {
-#define TABLE_ITEM(tb_type,mbr_type,mbr) {#mbr,TB_OFFSET(tb_type,mbr),sizeof(mbr_type),DB_ATTR_DEFAULT_ITEM},
-#define TABLE_ITEM_A(tb_type,mbr_type,mbr,tb_attr) {#mbr,TB_OFFSET(tb_type,mbr),sizeof(mbr_type),tb_attr},
+#define TABLE_ITEM(tb_type,mbr_type,mbr) {#mbr,TYPE_##mbr_type,TB_MBRCNT(tb_type,mbr_type,mbr),TB_MBRSIZE(tb_type,mbr),TB_OFFSET(tb_type,mbr),DB_ATTR_DEFAULT_ITEM},
+#define TABLE_ITEM_A(tb_type,mbr_type,mbr,tb_attr) {#mbr,TYPE_##mbr_type,TB_MBRCNT(tb_type,mbr_type,mbr),TB_MBRSIZE(tb_type,mbr),TB_OFFSET(tb_type,mbr),tb_attr},
 #define TABLE_END };
 
 #define TABLE_DEF(tb_type,attr) \
@@ -103,7 +106,7 @@ w_int32_t wind_tb_modify_value(char *mbrbname,w_int32_t dataindex,void *data,w_i
 //cond的格式为"mbrname1=value1&&mbr2=value2"类似的格式
 w_int32_t wind_tb_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt);
 w_int32_t wind_tb_query_count(char *tbname,w_int32_t *count);
-w_int32_t wind_tb_getdata(char *tbname,w_int32_t index,void *data);
+w_int32_t wind_tb_getdata(char * tbname,w_int32_t row_idx,void * data,w_int32_t data_size);
 
 #endif
 

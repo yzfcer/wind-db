@@ -32,6 +32,27 @@
 #define TB_NAME_LEN 12  //数据表名字长度
 #define MBR_NAME_LEN 20  //数据名字长度
 
+typedef enum 
+{
+    TYPE_w_int8_t = 0x01,
+    TYPE_w_int16_t ,
+    TYPE_w_int32_t ,
+    TYPE_w_int64_t ,
+
+    TYPE_w_uint8_t ,
+    TYPE_w_uint16_t ,
+    TYPE_w_uint32_t ,
+    TYPE_w_uint64_t ,
+
+    TYPE_w_bool_t ,
+    TYPE_w_str16_t ,
+    TYPE_w_str32_t ,
+    TYPE_w_str64_t ,
+    TYPE_w_str128_t ,
+    TYPE_w_str256_t ,
+    
+}PARA_TYPE;
+
 
 typedef struct __db_entry_s db_entry_s;
 typedef struct __tb_entry_s tb_entry_s;
@@ -67,6 +88,8 @@ struct __tb_entry_s
     w_uint16_t data_size;
     //偏移地址
     w_int16_t mbrname_offset;
+    w_int16_t type_offset;
+    w_int16_t count_offset;
     w_int16_t offset_offset;
     w_int16_t size_offset;
     w_int16_t attr_offset;

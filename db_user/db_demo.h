@@ -20,13 +20,14 @@
 *******************************************************************************************************/
 #ifndef DB_DEMO_H__
 #define DB_DEMO_H__
+#include "wind_type.h"
 #include "db_if.h"
 typedef struct 
 {
-	int k;
-	int a[2];
-	char b;
-	short c;
+	w_int32_t k;
+	w_int32_t a[2];
+	w_int8_t b;
+	w_int16_t c;
 }db_demo;
 
 TABLE_DECLARE(db_demo);

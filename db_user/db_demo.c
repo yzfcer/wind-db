@@ -20,13 +20,14 @@
 *******************************************************************************************************/
 #include "db_if.h"
 #include "db_demo.h"
+#include "db_entry.h"
 //定义数据库结构
 
 TABLE_START(db_demo)
-TABLE_ITEM_A(db_demo,int,k,DB_ATTR_KEY_ITEM)
-TABLE_ITEM(db_demo,int,a)
-TABLE_ITEM(db_demo,char,b)
-TABLE_ITEM(db_demo,short,c)
+TABLE_ITEM_A(db_demo,w_int32_t,k,DB_ATTR_KEY_ITEM)
+TABLE_ITEM(db_demo,w_int32_t,a)
+TABLE_ITEM(db_demo,w_int8_t,b)
+TABLE_ITEM(db_demo,w_int16_t,c)
 TABLE_END
 TABLE_DEF(db_demo,DB_ATTR_SINGLE)
 

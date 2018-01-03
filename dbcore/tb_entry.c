@@ -57,10 +57,19 @@ static w_int32_t table_get_attr_list(tb_entry_s *tbentry,w_int16_t *attr)
 static w_int32_t get_table_entry_size(w_int32_t item_cnt)
 {
     w_int32_t size = sizeof(tb_entry_s);
+    size = (((size + 7) >> 3) << 3);
     size += MBR_NAME_LEN * item_cnt;//item name
+    size = (((size + 7) >> 3) << 3);
+    size += sizeof(w_int8_t) * item_cnt;//type
+    size = (((size + 7) >> 3) << 3);
+    size += sizeof(w_int8_t) * item_cnt;//count
+    size = (((size + 7) >> 3) << 3);
     size += sizeof(w_int16_t) * item_cnt;//offset
+    size = (((size + 7) >> 3) << 3);
     size += sizeof(w_int16_t) * item_cnt;//size
+    size = (((size + 7) >> 3) << 3);
     size += sizeof(w_int16_t) * item_cnt;//attr
+    size = (((size + 7) >> 3) << 3);
     return size;
 }
 
@@ -96,7 +105,13 @@ tb_entry_s *table_entry_get_byname(char *combine_name)
     return table_entry_get_byname_from_db(dname,tname);
 }
 
-
+static w_uint16_t set_offset(w_uint16_t idx,w_uint16_t count,w_uint16_t *va,w_uint32_t size)
+{
+    w_int32_t si;
+    *va = (((idx + 7) >> 3) << 3);
+    si = (((size * count + 7) >> 3) << 3); 
+    return si;
+}
 
 w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cnt)
 {
@@ -104,6 +119,7 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
     w_err_t err;
     w_uint16_t offset;
     char *name_base;
+    w_uint8_t *type,*count;
     w_uint16_t *pos,*psize,*pattr;
     w_int32_t size;
     tb_entry_s *entry;
@@ -111,7 +127,7 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
     size = get_table_entry_size(item_cnt);
     entry = db_malloc(size);
     WIND_ASSERT_RETURN(entry != NULL,ERR_MEM);
-    
+    wind_memset(entry,0,size);
     entry->magic = TB_MAGIC;
     err = table_name_split(tbname,entry->dbname,entry->tbname);
     WIND_ASSERT_RETURN(err == ERR_OK,ERR_INVALID_PARAM);
@@ -129,17 +145,17 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
     entry->data_size = item_info[item_cnt-1].offset + item_info[item_cnt-1].size;
     
     offset = sizeof(tb_entry_s);
-    entry->mbrname_offset = offset;
-    offset += MBR_NAME_LEN * entry->item_cnt;
-    entry->offset_offset = offset;
-    offset += sizeof(item_info->offset) * entry->item_cnt;
-    entry->size_offset = offset;
-    offset += sizeof(item_info->size) * entry->item_cnt;
-    entry->attr_offset = offset;
-    offset += sizeof(item_info->attr) * entry->item_cnt;
-    entry->entry_size = offset;
+    offset = (((offset + 7) >> 3) << 3);
+    offset += set_offset(offset,entry->item_cnt,&entry->mbrname_offset,MBR_NAME_LEN);
+    offset += set_offset(offset,entry->item_cnt,&entry->type_offset,sizeof(item_info->type));
+    offset += set_offset(offset,entry->item_cnt,&entry->count_offset,sizeof(item_info->count));
+    offset += set_offset(offset,entry->item_cnt,&entry->offset_offset,sizeof(item_info->offset));
+    offset += set_offset(offset,entry->item_cnt,&entry->size_offset,sizeof(item_info->size));
+    offset += set_offset(offset,entry->item_cnt,&entry->attr_offset,sizeof(item_info->attr));
     
     name_base = (char*)db_get_addr(entry,entry->mbrname_offset);
+    type = (w_uint8_t*)db_get_addr(entry,entry->type_offset);
+    count = (w_uint8_t*)db_get_addr(entry,entry->count_offset);
     pos = (w_uint16_t*)db_get_addr(entry,entry->offset_offset);
     psize = (w_uint16_t*)db_get_addr(entry,entry->size_offset);
     pattr = (w_uint16_t*)db_get_addr(entry,entry->attr_offset);
@@ -147,6 +163,8 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
     {
         wind_strncpy(name_base,item_info[i].name,MBR_NAME_LEN);
         name_base += MBR_NAME_LEN;
+        type[i] = item_info[i].type;
+        count[i] = item_info[i].count;
         pos[i] = item_info[i].offset;
         psize[i] = item_info[i].size;
         pattr[i] = item_info[i].attr;
@@ -297,6 +315,13 @@ w_err_t table_entry_print_info(char *tbname)
     wind_printf("item count :%d\r\n",entry->item_cnt);
     wind_printf("data count :%d\r\n",entry->data_cnt);
     wind_printf("data  size :%d\r\n",entry->data_size);
+
+    wind_printf("name   offset:%d\r\n",entry->mbrname_offset);
+    wind_printf("type   offset:%d\r\n",entry->type_offset);
+    wind_printf("count  offset:%d\r\n",entry->count_offset);
+    wind_printf("offset offset:%d\r\n",entry->offset_offset);
+    wind_printf("size   offset:%d\r\n",entry->size_offset);
+    wind_printf("attr   offset:%d\r\n",entry->attr_offset);
 }
 
 w_err_t table_print_data(char *tbname)
