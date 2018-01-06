@@ -1,6 +1,6 @@
 /****************************************Copyright (c)**************************************************
 **                                       清  风  海  岸
-**文   件   名: db_demo.h
+**文   件   名: tb_demo.h
 **创   建   人: Jason Zhou
 **最后修改日期: 2017/11/23
 **描        述: 
@@ -24,13 +24,13 @@
 #include "db_if.h"
 typedef struct 
 {
-	w_int32_t k;
-	w_int32_t a[2];
-	w_int8_t b;
-	w_int16_t c;
-}db_demo;
+	w_int32_t key;
+	w_int32_t ademo[2];
+	w_int8_t bdemo;
+	w_int16_t cdemo;
+}tb_demo;
 
-TABLE_DECLARE(db_demo);
+TABLE_DECLARE(tb_demo);
 
 #endif
 
