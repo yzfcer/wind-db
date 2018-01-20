@@ -21,38 +21,34 @@
 #include "db.h"
 #include "db_if.h"
 #include "db_entry.h"
-w_int32_t wind_db_create(char *dbname,w_uint16_t attr)
+w_err_t wind_db_create(char *dbname,w_uint16_t attr)
 {
-    db_entry_create(dbname,attr);
-    return 0;
+    return db_entry_create(dbname,attr);
 }
 
-w_int32_t wind_db_distroy(char *dbname)
+w_err_t wind_db_distroy(char *dbname)
 {
-    db_entry_destroy(dbname);
-    db_entry_print_info(dbname);
-    return 0;
+    return db_entry_destroy(dbname);
 }
 
 
-w_int32_t wind_tb_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cnt)
+w_err_t wind_tb_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cnt)
 {
-    tb_entry_create(tbname,item_info,item_cnt);
-    return 0;
+    return tb_entry_create(tbname,item_info,item_cnt);
 }
 
-w_int32_t wind_tb_distroy(char *tbname)
+w_err_t wind_tb_distroy(char *tbname)
 {
-    return 0;
+    return tb_entry_destroy(tbname);
 }
 
 
-w_int32_t wind_tb_insert(char *tbname,void *row_data,w_int32_t row_size)
+w_err_t wind_tb_insert(char *tbname,void *row_data,w_int32_t row_size)
 {
     return tb_entry_insert(tbname,row_data,row_size);
 }
 
-w_int32_t wind_tb_delete(char *tbname,w_int32_t row_idx)
+w_err_t wind_tb_delete(char *tbname,w_int32_t row_idx)
 {
     return tb_entry_delete(tbname,row_idx);
 }
@@ -62,28 +58,27 @@ w_int32_t wind_tb_get_row_index(char * tbname,w_int32_t row_idx,void * data,w_in
     return tb_entry_get_data(tbname,row_idx,data,data_size);
 }
 
-w_int32_t wind_tb_modify(char *tbname,w_int32_t tbindex,void *row_data,w_int32_t row_size)
+w_err_t wind_tb_modify(char *tbname,w_int32_t tbindex,void *row_data,w_int32_t row_size)
 {
-    tb_entry_modify(tbname,tbindex,row_data,row_size);
-    return 0;
+    return tb_entry_modify(tbname,tbindex,row_data,row_size);
 }
 
-w_int32_t wind_tb_modify_value(char *tbname,char *mbrname,w_int32_t row_idx,void *data,w_int32_t data_size)
+w_err_t wind_tb_modify_value(char *tbname,char *mbrname,w_int32_t row_idx,void *data,w_int32_t data_size)
 {
-    tb_entry_modify_value(tbname,mbrname,row_idx,data,data_size);
-    return 0;
+    return tb_entry_modify_value(tbname,mbrname,row_idx,data,data_size);
 }
 
-w_int32_t wind_tb_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
+w_err_t wind_tb_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
 {
     return tb_entry_query_cond_count(tbname,cond,idxlist,cnt);
 }
-w_int32_t wind_tb_query_count(char *tbname,w_int32_t *count)
+
+w_err_t wind_tb_query_count(char *tbname,w_int32_t *count)
 {
     return tb_entry_query_count(tbname,count);
 }
 
-w_int32_t wind_tb_getdata(char * tbname,w_int32_t row_idx,void * data,w_int32_t data_size)
+w_err_t wind_tb_getdata(char * tbname,w_int32_t row_idx,void * data,w_int32_t data_size)
 {
     return tb_entry_get_data(tbname,row_idx,data,data_size);
 }
