@@ -43,7 +43,7 @@ static w_int32_t get_db_hash(char *dbname)
 
 
 
-w_err_t db_create(char *dbname,w_uint16_t attr)
+w_err_t db_entry_create(char *dbname,w_uint16_t attr)
 {
     db_entry_s *entry;
     entry = db_get_byname(dbname);
@@ -63,7 +63,7 @@ w_err_t db_create(char *dbname,w_uint16_t attr)
     return B_TRUE;
 }
 
-w_err_t db_destroy(char *dbname)
+w_err_t db_entry_destroy(char *dbname)
 {
     db_entry_s *entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
@@ -89,7 +89,7 @@ db_entry_s *db_get_byname(char *dbname)
     return NULL;
 }
 
-w_err_t db_setattr(char *dbname,w_uint16_t attr)
+w_err_t db_entry_setattr(char *dbname,w_uint16_t attr)
 {
     db_entry_s *entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
@@ -97,7 +97,7 @@ w_err_t db_setattr(char *dbname,w_uint16_t attr)
     return ERR_OK;
 }
 
-w_err_t db_getattr(char *dbname,w_uint16_t *attr)
+w_err_t db_entry_getattr(char *dbname,w_uint16_t *attr)
 {
     db_entry_s *entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
@@ -105,7 +105,7 @@ w_err_t db_getattr(char *dbname,w_uint16_t *attr)
     return ERR_OK;
 }
 
-w_err_t db_insert_tb(db_entry_s *db,tb_entry_s *tb)
+w_err_t db_entry_insert_tb(db_entry_s *db,tb_entry_s *tb)
 {
     WIND_ASSERT_RETURN(db != NULL,ERR_NULL_POINTER);
     WIND_ASSERT_RETURN(tb != NULL,ERR_NULL_POINTER);
@@ -114,7 +114,7 @@ w_err_t db_insert_tb(db_entry_s *db,tb_entry_s *tb)
     return ERR_OK;
 }
 
-w_err_t db_remove_tb(db_entry_s *db,tb_entry_s *tb)
+w_err_t db_entry_remove_tb(db_entry_s *db,tb_entry_s *tb)
 {
     WIND_ASSERT_RETURN(db != NULL,ERR_NULL_POINTER);
     WIND_ASSERT_RETURN(tb != NULL,ERR_NULL_POINTER);
@@ -124,7 +124,7 @@ w_err_t db_remove_tb(db_entry_s *db,tb_entry_s *tb)
 }
 
 
-w_err_t db_print_info(char *dbname)
+w_err_t db_entry_print_info(char *dbname)
 {
     db_entry_s *entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);

@@ -31,7 +31,7 @@ static w_err_t table_name_split(char *combine_name,char *dname,char *tname)
 }
 
 
-static w_int32_t get_table_entry_size(w_int32_t item_cnt)
+static w_int32_t get_tb_entry_size(w_int32_t item_cnt)
 {
     w_int32_t size = sizeof(tb_entry_s);
     size = (((size + 7) >> 3) << 3);
@@ -50,7 +50,7 @@ static w_int32_t get_table_entry_size(w_int32_t item_cnt)
     return size;
 }
 
-tb_entry_s *table_entry_get_byname_from_db(char *dbname,char *tbname)
+tb_entry_s *tb_entry_get_byname_from_db(char *dbname,char *tbname)
 {
     db_entry_s *dbentry;
     tb_entry_s *tbentry;
@@ -72,14 +72,14 @@ tb_entry_s *table_entry_get_byname_from_db(char *dbname,char *tbname)
 }
 
 
-tb_entry_s *table_entry_get_byname(char *combine_name)
+tb_entry_s *tb_entry_get_byname(char *combine_name)
 {
     w_err_t err;
     char dname[TB_NAME_LEN];
     char tname[TB_NAME_LEN];
     err = table_name_split(combine_name,dname,tname);
     WIND_ASSERT_RETURN(err == ERR_OK,NULL);
-    return table_entry_get_byname_from_db(dname,tname);
+    return tb_entry_get_byname_from_db(dname,tname);
 }
 
 static w_uint16_t set_offset(w_uint16_t idx,w_uint16_t count,w_uint16_t *va,w_uint32_t size)
@@ -90,7 +90,20 @@ static w_uint16_t set_offset(w_uint16_t idx,w_uint16_t count,w_uint16_t *va,w_ui
     return si;
 }
 
-w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cnt)
+static w_int32_t get_mbr_index(tb_entry_s *entry,char *mbrname)
+{
+    w_int32_t i;
+    char *name;
+    for(i = 0;i < entry->item_cnt;i ++)
+    {
+        name = db_get_addr(entry,entry->mbrname_offset + i * MBR_NAME_LEN);
+        if(wind_strcmp(mbrname,name) == 0)
+            return i;
+    }
+    return -1;
+}
+
+w_err_t tb_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cnt)
 {
     w_int32_t i;
     w_err_t err;
@@ -101,7 +114,7 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
     w_int32_t size;
     tb_entry_s *entry;
     
-    size = get_table_entry_size(item_cnt);
+    size = get_tb_entry_size(item_cnt);
     entry = db_malloc(size);
     WIND_ASSERT_RETURN(entry != NULL,ERR_MEM);
     wind_memset(entry,0,size);
@@ -147,21 +160,21 @@ w_err_t table_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item
         pattr[i] = item_info[i].attr;
     }
     //dlist_insert_tail(&entry->db->tblist,&entry->tbnode);
-    err = db_insert_tb(entry->db,entry);
+    err = db_entry_insert_tb(entry->db,entry);
     WIND_ASSERT_RETURN(err == ERR_OK,ERR_COMMAN);
     return B_TRUE;
 }
 
-w_err_t table_entry_destroy(char *tbname)
+w_err_t tb_entry_destroy(char *tbname)
 {
     dnode_s *dnode;
     w_err_t err;
     tb_entry_s *entry;
     //wind_printf("************ERROR**************\r\n");
-    entry = table_entry_get_byname(tbname);
+    entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->db != NULL,ERR_NULL_POINTER);
-    err = db_remove_tb(entry->db,entry);
+    err = db_entry_remove_tb(entry->db,entry);
     WIND_ASSERT_RETURN(err == ERR_OK,ERR_COMMAN);
     foreach_node(dnode,&entry->data_list)
     {
@@ -172,12 +185,12 @@ w_err_t table_entry_destroy(char *tbname)
     return ERR_OK;
 }
 
-w_err_t table_entry_insert(char *tbname,void *data,w_int32_t datasize)
+w_err_t tb_entry_insert(char *tbname,void *data,w_int32_t datasize)
 {
     w_int32_t size;
     tb_entry_s *entry;
     dnode_s *dnode;
-    entry = table_entry_get_byname(tbname);
+    entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->data_cnt < 65535,ERR_COMMAN);
     size = sizeof(dnode_s) + entry->data_size;
@@ -189,14 +202,14 @@ w_err_t table_entry_insert(char *tbname,void *data,w_int32_t datasize)
     return ERR_OK;
 }
 
-w_err_t table_entry_delete(char *tbname,w_int32_t row_idx)
+w_err_t tb_entry_delete(char *tbname,w_int32_t row_idx)
 {
     w_int32_t size;
     tb_entry_s *entry;
     dnode_s *dnode;
     w_int32_t idx = 0;
     WIND_ASSERT_RETURN(row_idx >= 0,ERR_INVALID_PARAM);
-    entry = table_entry_get_byname(tbname);
+    entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->data_cnt > 0,ERR_COMMAN);
@@ -213,14 +226,14 @@ w_err_t table_entry_delete(char *tbname,w_int32_t row_idx)
     return ERR_COMMAN;
 }
 
-w_err_t table_entry_get_data(char *tbname,w_int32_t row_idx,void *data,w_int32_t data_size)
+w_err_t tb_entry_get_data(char *tbname,w_int32_t row_idx,void *data,w_int32_t data_size)
 {
     w_int32_t size;
     tb_entry_s *entry;
     dnode_s *dnode;
     w_int32_t idx = 0;
     WIND_ASSERT_RETURN(row_idx >= 0,ERR_INVALID_PARAM);
-    entry = table_entry_get_byname(tbname);
+    entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(data_size >= entry->data_size,ERR_INVALID_PARAM);
@@ -236,14 +249,14 @@ w_err_t table_entry_get_data(char *tbname,w_int32_t row_idx,void *data,w_int32_t
     return ERR_COMMAN;
 }
 
-w_err_t table_entry_modify(char *tbname,w_int32_t row_idx,void *data,w_int32_t data_size)
+w_err_t tb_entry_modify(char *tbname,w_int32_t row_idx,void *data,w_int32_t data_size)
 {
     w_int32_t size;
     tb_entry_s *entry;
     dnode_s *dnode;
     w_int32_t idx = 0;
     WIND_ASSERT_RETURN(row_idx >= 0,ERR_INVALID_PARAM);
-    entry = table_entry_get_byname(tbname);
+    entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(data_size >= entry->data_size,ERR_INVALID_PARAM);
@@ -259,31 +272,59 @@ w_err_t table_entry_modify(char *tbname,w_int32_t row_idx,void *data,w_int32_t d
     }
     return ERR_COMMAN;
 }
-w_err_t table_entry_query_count(char *tbname,w_int32_t *count)
+
+w_err_t tb_entry_modify_value(char *tbname,char *mbrname,w_int32_t row_idx,void *data,w_int32_t data_size)
+{
+    w_int32_t size,i;
+    tb_entry_s *entry;
+    dnode_s *dnode;
+    w_int32_t idx = 0,item_idx;
+    w_addr_t addr;
+    char *name;
+    w_uint16_t *offset;
+    WIND_ASSERT_RETURN(row_idx >= 0,ERR_INVALID_PARAM);
+    entry = tb_entry_get_byname(tbname);
+    WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    item_idx = get_mbr_index(entry,mbrname);
+    WIND_ASSERT_RETURN(item_idx >= 0,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(row_idx < entry->data_cnt,ERR_INVALID_PARAM);
+    WIND_ASSERT_RETURN(data_size > 0,ERR_INVALID_PARAM);
+    foreach_node(dnode,&entry->data_list)
+    {
+        if(idx == row_idx)
+        {
+            offset = db_get_addr(entry,entry->offset_offset);
+            addr = db_get_addr(dnode,sizeof(dnode_s)+offset[item_idx]);
+            wind_memcpy((void*)addr,data,data_size);
+            return ERR_OK;
+        }
+        idx ++;
+    }
+    return ERR_COMMAN;
+}
+
+w_err_t tb_entry_query_count(char *tbname,w_int32_t *count)
 {
     w_int32_t size;
     tb_entry_s *entry;
     dnode_s *dnode;
     w_int32_t idx = 0;
-    entry = table_entry_get_byname(tbname);
+    entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     *count = entry->data_cnt;
     return ERR_OK;
 }
 
-w_err_t table_entry_modify_value(char *tbname,char *mbrbname,w_int32_t row_idx,void *data,w_int32_t size)
+
+
+w_err_t tb_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
 {
     return ERR_COMMAN;
 }
 
-w_err_t table_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
+w_err_t tb_entry_print_info(char *tbname)
 {
-    return ERR_COMMAN;
-}
-
-w_err_t table_entry_print_info(char *tbname)
-{
-    tb_entry_s *entry = table_entry_get_byname(tbname);
+    tb_entry_s *entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     wind_printf("\r\ntable info:\r\n");
     wind_printf("DB    name :%s\r\n",entry->dbname);
@@ -302,12 +343,12 @@ w_err_t table_entry_print_info(char *tbname)
     wind_printf("attr   offset:%d\r\n",entry->attr_offset);
 }
 
-w_err_t table_entry_print_data(char *tbname)
+w_err_t tb_entry_print_data(char *tbname)
 {
     w_int32_t idx = 0;
     dnode_s *dnode;
     w_uint8_t *data;
-    tb_entry_s *entry = table_entry_get_byname(tbname);
+    tb_entry_s *entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->magic == TB_MAGIC,ERR_INVALID_PARAM);
     wind_printf("<DB name=%s.%s>\r\n",entry->dbname,entry->tbname);
@@ -315,7 +356,7 @@ w_err_t table_entry_print_data(char *tbname)
     {
         data = (w_uint8_t *)&dnode[1];
         wind_printf("   <table index=%d>\r\n",idx);
-        table_print_data(entry,data);
+        tb_print_data(entry,data);
         wind_printf("   </table index=%d>\r\n",idx);
         idx ++;
     }

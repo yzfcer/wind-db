@@ -84,7 +84,7 @@ static void print_string_arr(void *data,w_int32_t count)
         wind_printf("%s ",va[i]);
 }
 
-void table_print_data(tb_entry_s *entry,w_uint8_t *data)
+void tb_print_data(tb_entry_s *entry,w_uint8_t *data)
 {
     w_int32_t i;
     char *name_base;

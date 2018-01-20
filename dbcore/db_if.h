@@ -102,7 +102,7 @@ w_int32_t wind_tb_delete(char *tbname,w_int32_t row_idx);
 w_int32_t wind_tb_get_row_index(char * tbname,w_int32_t row_idx,void * data,w_int32_t data_size);
 w_int32_t wind_tb_modify(char *tbname,w_int32_t tbindex,void *row_data,w_int32_t row_size);
 //数据字段名称格式为 dbname.tbname.mbrname
-w_int32_t wind_tb_modify_value(char *mbrbname,w_int32_t dataindex,void *data,w_int32_t size);
+w_int32_t wind_tb_modify_value(char *tbname,char *mbrname,w_int32_t row_idx,void *data,w_int32_t data_size);
 //cond的格式为"mbrname1=value1&&mbr2=value2"类似的格式
 w_int32_t wind_tb_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt);
 w_int32_t wind_tb_query_count(char *tbname,w_int32_t *count);
