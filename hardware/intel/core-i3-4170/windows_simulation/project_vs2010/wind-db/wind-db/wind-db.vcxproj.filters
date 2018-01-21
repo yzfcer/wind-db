@@ -55,6 +55,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_print.c">
       <Filter>dbcore</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\db_user\db_demo1.c">
+      <Filter>db_user</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_if.h">
@@ -89,6 +92,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\..\..\..\..\comman\wind_dlist.h">
       <Filter>comman</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\..\..\..\..\db_user\db_demo1.h">
+      <Filter>db_user</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

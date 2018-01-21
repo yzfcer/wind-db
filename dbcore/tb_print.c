@@ -99,7 +99,7 @@ void tb_print_data(tb_entry_s *entry,w_uint8_t *data)
 
     for(i = 0;i < entry->item_cnt;i ++)
     {
-        wind_printf("       <%s=",&name_base[i*MBR_NAME_LEN]);
+        wind_printf("|   |   |---<%s=",&name_base[i*MBR_NAME_LEN]);
         switch(type[i])
         {
             case TYPE_w_int8_t:

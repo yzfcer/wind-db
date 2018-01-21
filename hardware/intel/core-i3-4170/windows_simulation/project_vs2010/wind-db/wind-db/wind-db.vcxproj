@@ -19,6 +19,7 @@
     <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_entry.c" />
     <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_print.c" />
     <ClCompile Include="..\..\..\..\..\..\..\db_user\db_demo.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\db_user\db_demo1.c" />
     <ClCompile Include="..\..\..\port\db_port.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_private.h" />
     <ClInclude Include="..\..\..\..\..\..\..\dbcore\tb_entry.h" />
     <ClInclude Include="..\..\..\..\..\..\..\db_user\db_demo.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\db_user\db_demo1.h" />
     <ClInclude Include="..\..\..\port\db_config.h" />
     <ClInclude Include="..\..\..\port\db_port.h" />
     <ClInclude Include="..\..\..\port\wind_type.h" />

@@ -159,7 +159,6 @@ w_err_t tb_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cn
         psize[i] = item_info[i].size;
         pattr[i] = item_info[i].attr;
     }
-    //dlist_insert_tail(&entry->db->tblist,&entry->tbnode);
     err = db_entry_insert_tb(entry->db,entry);
     WIND_ASSERT_RETURN(err == ERR_OK,ERR_COMMAN);
     return B_TRUE;
@@ -170,7 +169,6 @@ w_err_t tb_entry_destroy(char *tbname)
     dnode_s *dnode;
     w_err_t err;
     tb_entry_s *entry;
-    //wind_printf("************ERROR**************\r\n");
     entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->db != NULL,ERR_NULL_POINTER);
@@ -319,6 +317,7 @@ w_err_t tb_entry_query_count(char *tbname,w_int32_t *count)
 
 w_err_t tb_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt)
 {
+    wind_printf("tb_entry_query_cond_count is NOT supported.\r\n");
     return ERR_COMMAN;
 }
 
@@ -351,16 +350,16 @@ w_err_t tb_entry_print_data(char *tbname)
     tb_entry_s *entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->magic == TB_MAGIC,ERR_INVALID_PARAM);
-    wind_printf("<DB name=%s.%s>\r\n",entry->dbname,entry->tbname);
+    wind_printf("|---<DB name=%s>\r\n",entry->dbname);
     foreach_node(dnode,&entry->data_list)
     {
         data = (w_uint8_t *)&dnode[1];
-        wind_printf("   <table index=%d>\r\n",idx);
+        wind_printf("|   |---<table name=%s index=%d>\r\n",entry->tbname,idx);
         tb_print_data(entry,data);
-        wind_printf("   </table index=%d>\r\n",idx);
+        wind_printf("|   |---</table index=%d>\r\n",idx);
         idx ++;
     }
-    wind_printf("</DB name=%s.%s>\r\n",entry->dbname,entry->tbname);
+    wind_printf("|---</DB name=%s.%s>\r\n",entry->dbname,entry->tbname);
     return ERR_OK;
 }
 

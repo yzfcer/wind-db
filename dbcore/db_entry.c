@@ -133,6 +133,17 @@ w_err_t db_entry_print_info(char *dbname)
     wind_printf("table count:%d\r\n",entry->tb_count);
 }
 
+w_err_t db_entry_print_data(char *dbname)
+{
+    tb_entry_s *entry;
+    dnode_s *dnode;
+    foreach_node(dnode,&db_list)
+    {
+        entry = DLIST_OBJ(dnode,tb_entry_s,tbnode);
+        //tb_entry_print_data(entry->)
+    }
+    return ERR_OK;
+}
 
 
 
