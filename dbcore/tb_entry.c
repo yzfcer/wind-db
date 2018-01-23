@@ -11,7 +11,7 @@ static w_int32_t get_tb_hash(char *tbname)
     WIND_ASSERT_RETURN(len < DB_NAME_LEN,-1);
     for(i = 0;i < len;i ++)
         hash += tbname[i];
-    return hash;       
+    return hash;
 }
 
 static w_err_t table_name_split(char *combine_name,char *dname,char *tname)
@@ -120,9 +120,10 @@ w_err_t tb_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cn
     wind_memset(entry,0,size);
     entry->magic = TB_MAGIC;
     err = table_name_split(tbname,entry->dbname,entry->tbname);
-    WIND_ASSERT_RETURN(err == ERR_OK,ERR_INVALID_PARAM);
+    WIND_ASSERT_TODO(err == ERR_OK,db_free(entry),ERR_INVALID_PARAM);
     entry->base = (w_uint32_t)entry;
     entry->db = db_get_byname(entry->dbname);
+    WIND_ASSERT_TODO(entry->db != NULL,db_free(entry),ERR_INVALID_PARAM);
     DNODE_INIT(entry->tbnode);
 
 
@@ -160,7 +161,7 @@ w_err_t tb_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cn
         pattr[i] = item_info[i].attr;
     }
     err = db_entry_insert_tb(entry->db,entry);
-    WIND_ASSERT_RETURN(err == ERR_OK,ERR_COMMAN);
+    WIND_ASSERT_TODO(err == ERR_OK,db_free(entry),ERR_COMMAN);
     return B_TRUE;
 }
 
