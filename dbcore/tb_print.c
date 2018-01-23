@@ -81,7 +81,7 @@ static void print_string_arr(void *data,w_int32_t count)
     w_int32_t i;
     w_str256_t *va = (w_str256_t *)data;
     for(i = 0;i < count;i ++)
-        wind_printf("%s ",va[i]);
+        wind_printf("\"%s\" ",va[i]);
 }
 
 void tb_print_data(tb_entry_s *entry,w_uint8_t *data,w_int32_t idx)

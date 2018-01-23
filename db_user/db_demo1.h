@@ -28,6 +28,8 @@ typedef struct
 	w_int32_t ademo1[2];
 	w_int8_t bdemo1;
 	w_int16_t cdemo1;
+    w_bool_t bodemo1;
+    w_str64_t strdemo;
 }tb_demo1;
 
 TABLE_DECLARE(tb_demo1);
