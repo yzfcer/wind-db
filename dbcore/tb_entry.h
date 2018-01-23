@@ -23,8 +23,9 @@ w_err_t tb_entry_query_count(char *tbname,w_int32_t *count);
 w_err_t tb_entry_query_cond_count(char *tbname,char *cond,w_int32_t *idxlist,w_int32_t cnt);
 
 w_err_t tb_entry_print_info(char *tbname);
-w_err_t tb_entry_print_data(char *tbname);
-void tb_print_data(tb_entry_s *entry,w_uint8_t *data);
+w_err_t tb_entry_print_data(tb_entry_s *entry);
+w_err_t tb_entry_print_table(char *tbname);
+void tb_print_data(tb_entry_s *entry,w_uint8_t *data,w_int32_t idx);
 
 #endif
 

@@ -6,5 +6,7 @@ void main(void)
 {
 	create_tb_demo();
 	create_tb_demo1();
+    db_entry_print_all();
+        
 	system("pause");
 }

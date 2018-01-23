@@ -342,24 +342,30 @@ w_err_t tb_entry_print_info(char *tbname)
     wind_printf("attr   offset:%d\r\n",entry->attr_offset);
 }
 
-w_err_t tb_entry_print_data(char *tbname)
+w_err_t tb_entry_print_data(tb_entry_s *entry)
 {
-    w_int32_t idx = 0;
     dnode_s *dnode;
     w_uint8_t *data;
+    w_int32_t idx = 0;
+    
+    wind_printf("|   |---<table name=%s>\r\n",entry->tbname);
+    foreach_node(dnode,&entry->data_list)
+    {
+        data = (w_uint8_t *)&dnode[1];
+        tb_print_data(entry,data,idx);
+        idx ++;
+    }
+    wind_printf("|   |---</table name=%s>\r\n",entry->tbname);
+}
+
+w_err_t tb_entry_print_table(char *tbname)
+{
     tb_entry_s *entry = tb_entry_get_byname(tbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
     WIND_ASSERT_RETURN(entry->magic == TB_MAGIC,ERR_INVALID_PARAM);
     wind_printf("|---<DB name=%s>\r\n",entry->dbname);
-    foreach_node(dnode,&entry->data_list)
-    {
-        data = (w_uint8_t *)&dnode[1];
-        wind_printf("|   |---<table name=%s index=%d>\r\n",entry->tbname,idx);
-        tb_print_data(entry,data);
-        wind_printf("|   |---</table index=%d>\r\n",idx);
-        idx ++;
-    }
-    wind_printf("|---</DB name=%s.%s>\r\n",entry->dbname,entry->tbname);
+    tb_entry_print_data(entry);
+    wind_printf("|---</DB name=%s>\r\n",entry->dbname);
     return ERR_OK;
 }
 

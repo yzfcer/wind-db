@@ -133,18 +133,47 @@ w_err_t db_entry_print_info(char *dbname)
     wind_printf("table count:%d\r\n",entry->tb_count);
 }
 
-w_err_t db_entry_print_data(char *dbname)
+w_err_t db_entry_print_data(db_entry_s *entry)
 {
-    tb_entry_s *entry;
+    tb_entry_s *tbentry;
+    dnode_s *dnode;
+    wind_printf("|---<DB name=%s>\r\n",entry->name);
+    foreach_node(dnode,&entry->tblist)
+    {
+        tbentry = DLIST_OBJ(dnode,tb_entry_s,tbnode);
+        tb_entry_print_data(tbentry);
+    }
+    wind_printf("|---</DB name=%s>\r\n",entry->name);
+    return ERR_OK;
+}
+
+w_err_t db_entry_print_db(char *dbname)
+{
+    db_entry_s *entry;
     dnode_s *dnode;
     foreach_node(dnode,&db_list)
     {
         entry = DLIST_OBJ(dnode,tb_entry_s,tbnode);
-        //tb_entry_print_data(entry->)
+        if(wind_strcmp(entry->name,dbname) == 0)
+        {
+            db_entry_print_data(entry);
+            return ERR_OK;
+        }
     }
-    return ERR_OK;
+    return ERR_COMMAN;
 }
 
+w_err_t db_entry_print_all(void)
+{
+    db_entry_s *entry;
+    dnode_s *dnode;
+    foreach_node(dnode,&db_list)
+    {
+        entry = DLIST_OBJ(dnode,db_entry_s,dbnode);
+        db_entry_print_data(entry);
+    }
+    return ERR_COMMAN;
+}
 
 
 

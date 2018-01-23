@@ -41,7 +41,9 @@ w_err_t db_entry_getattr(char *dbname,w_uint16_t *attr);
 w_err_t db_entry_insert_tb(db_entry_s *db,tb_entry_s *tb);
 w_err_t db_entry_remove_tb(db_entry_s *db,tb_entry_s *tb);
 w_err_t db_entry_print_info(char *dbname);
-w_err_t db_entry_print_data(char *dbname);
+w_err_t db_entry_print_data(db_entry_s *entry);
+w_err_t db_entry_print_db(char *dbname);
+w_err_t db_entry_print_all(void);
 
 
 #endif

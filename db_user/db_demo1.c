@@ -51,8 +51,6 @@ void create_tb_demo1(void)
 	wind_tb_insert("db1.tb_demo1",&demo1,sizeof(demo1));
 	demo1.key = 2;
 	wind_tb_insert("db1.tb_demo1",&demo1,sizeof(demo1));
-	demo1.key = 3;
-	wind_tb_insert("db1.tb_demo1",&demo1,sizeof(demo1));
 
 	wind_tb_query_count("db1.tb_demo1",&cnt);
 
@@ -63,7 +61,6 @@ void create_tb_demo1(void)
     wind_tb_modify_value("db1.tb_demo1","bdemo1",1,&demo1.bdemo1,sizeof(demo1.bdemo1));
     db_entry_print_info("db1");
 	tb_entry_print_info("db1.tb_demo1");
-    tb_entry_print_data("db1.tb_demo1");
 }
 
 

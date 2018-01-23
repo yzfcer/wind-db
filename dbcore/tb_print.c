@@ -84,7 +84,7 @@ static void print_string_arr(void *data,w_int32_t count)
         wind_printf("%s ",va[i]);
 }
 
-void tb_print_data(tb_entry_s *entry,w_uint8_t *data)
+void tb_print_data(tb_entry_s *entry,w_uint8_t *data,w_int32_t idx)
 {
     w_int32_t i;
     char *name_base;
@@ -96,10 +96,10 @@ void tb_print_data(tb_entry_s *entry,w_uint8_t *data)
     pos = (w_uint16_t*)db_get_addr(entry,entry->offset_offset);
     psize = (w_uint16_t*)db_get_addr(entry,entry->size_offset);
     pattr = (w_uint16_t*)db_get_addr(entry,entry->attr_offset);
-
+    wind_printf("|   |   |---<index=%d>\r\n",idx);
     for(i = 0;i < entry->item_cnt;i ++)
     {
-        wind_printf("|   |   |---<%s=",&name_base[i*MBR_NAME_LEN]);
+        wind_printf("|   |   |   |---<%s=",&name_base[i*MBR_NAME_LEN]);
         switch(type[i])
         {
             case TYPE_w_int8_t:
@@ -142,5 +142,6 @@ void tb_print_data(tb_entry_s *entry,w_uint8_t *data)
         }
         wind_printf("/>\r\n");
     }
+    wind_printf("|   |   |---</index=%d>\r\n",idx);
 }
 
