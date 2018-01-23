@@ -164,6 +164,15 @@ w_err_t tb_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cn
     return B_TRUE;
 }
 
+w_bool_t tb_entry_exist(char *tbname)
+{
+    tb_entry_s *entry;
+    entry = tb_entry_get_byname(tbname);
+    if(entry != NULL)
+        return B_TRUE;
+    return B_FALSE;
+}
+
 w_err_t tb_entry_destroy(char *tbname)
 {
     dnode_s *dnode;

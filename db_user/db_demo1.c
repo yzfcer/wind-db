@@ -54,7 +54,7 @@ void create_tb_demo1(void)
 	wind_tb_insert("db1.tb_demo1",&demo1,sizeof(demo1));
 	demo1.key = 2;
     demo1.bodemo1 = B_FALSE;
-    wind_strcpy(demo1.strdemo,"demo1 test.");
+    wind_strcpy(demo1.strdemo,"demo1 64 bytes string.");
 	wind_tb_insert("db1.tb_demo1",&demo1,sizeof(demo1));
 
 	wind_tb_query_count("db1.tb_demo1",&cnt);

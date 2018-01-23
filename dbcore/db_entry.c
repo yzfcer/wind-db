@@ -89,6 +89,15 @@ db_entry_s *db_get_byname(char *dbname)
     return NULL;
 }
 
+w_bool_t db_entry_exist(char *dbname)
+{
+    db_entry_s *entry;
+    entry = db_get_byname(dbname);
+    if(entry != NULL)
+        return B_TRUE;
+    return B_FALSE;
+}
+
 w_err_t db_entry_setattr(char *dbname,w_uint16_t attr)
 {
     db_entry_s *entry = db_get_byname(dbname);

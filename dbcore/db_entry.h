@@ -34,6 +34,7 @@
 
 //Êı¾İ¿âº¯Êı
 db_entry_s *db_get_byname(char *dbname);
+w_bool_t db_entry_exist(char *dbname);
 w_err_t db_entry_create(char *dbname,w_uint16_t attr);
 w_err_t db_entry_destroy(char *dbname);
 w_err_t db_entry_setattr(char *dbname,w_uint16_t attr);
