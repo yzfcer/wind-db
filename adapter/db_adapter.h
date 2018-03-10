@@ -26,7 +26,7 @@
 #define DB_ADAPTER_H__
 #include "wind_type.h"
 void *db_malloc(w_int32_t size);
-void *db_free(void *ptr);
+void db_free(void *ptr);
 
 
 #endif

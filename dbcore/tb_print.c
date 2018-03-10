@@ -96,10 +96,10 @@ void tb_print_data(tb_entry_s *entry,w_uint8_t *data,w_int32_t idx)
     pos = (w_uint16_t*)db_get_addr(entry,entry->offset_offset);
     psize = (w_uint16_t*)db_get_addr(entry,entry->size_offset);
     pattr = (w_uint16_t*)db_get_addr(entry,entry->attr_offset);
-    wind_printf("|   |   |---<index=%d>\r\n",idx);
+    wind_printf("|   |   |---<row index=%d>\r\n",idx);
     for(i = 0;i < entry->item_cnt;i ++)
     {
-        wind_printf("|   |   |   |---<%s=",&name_base[i*MBR_NAME_LEN]);
+        wind_printf("|   |   |   |---<member %s=",&name_base[i*MBR_NAME_LEN]);
         switch(type[i])
         {
             case TYPE_w_int8_t:
@@ -142,6 +142,6 @@ void tb_print_data(tb_entry_s *entry,w_uint8_t *data,w_int32_t idx)
         }
         wind_printf("/>\r\n");
     }
-    wind_printf("|   |   |---</index=%d>\r\n",idx);
+    wind_printf("|   |   |---</row index=%d>\r\n",idx);
 }
 

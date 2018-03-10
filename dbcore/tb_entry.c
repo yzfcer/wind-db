@@ -14,7 +14,7 @@ static w_int32_t get_tb_hash(char *tbname)
     return hash;
 }
 
-static w_err_t table_name_split(char *combine_name,char *dname,char *tname)
+static w_err_t tb_name_split(char *combine_name,char *dname,char *tname)
 {
     w_int32_t len;
     char *offset = wind_strstr(combine_name,".");
@@ -77,7 +77,7 @@ tb_entry_s *tb_entry_get_byname(char *combine_name)
     w_err_t err;
     char dname[TB_NAME_LEN];
     char tname[TB_NAME_LEN];
-    err = table_name_split(combine_name,dname,tname);
+    err = tb_name_split(combine_name,dname,tname);
     WIND_ASSERT_RETURN(err == ERR_OK,NULL);
     return tb_entry_get_byname_from_db(dname,tname);
 }
@@ -119,7 +119,7 @@ w_err_t tb_entry_create(char *tbname,tb_item_info_s *item_info,w_int32_t item_cn
     WIND_ASSERT_RETURN(entry != NULL,ERR_MEM);
     wind_memset(entry,0,size);
     entry->magic = TB_MAGIC;
-    err = table_name_split(tbname,entry->dbname,entry->tbname);
+    err = tb_name_split(tbname,entry->dbname,entry->tbname);
     WIND_ASSERT_TODO(err == ERR_OK,db_free(entry),ERR_INVALID_PARAM);
     entry->base = (w_uint32_t)entry;
     entry->db = db_get_byname(entry->dbname);
@@ -176,6 +176,7 @@ w_bool_t tb_entry_exist(char *tbname)
 
 w_err_t tb_entry_destroy(char *tbname)
 {
+    
     dnode_s *dnode;
     w_err_t err;
     tb_entry_s *entry;

@@ -13,7 +13,7 @@ void create_tb_demo(void)
 	tb_demo demo;
 	int idx[10] = {0};
 	short c = 24;
-	int cnt;
+	w_int32_t cnt;
 	demo.key =1;
 	demo.ademo[0] = 2;
 	demo.ademo[1] = 5;

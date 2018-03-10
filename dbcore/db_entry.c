@@ -41,10 +41,15 @@ static w_int32_t get_db_hash(char *dbname)
     return hash;       
 }
 
+static dlist_s *get_db_list(void)
+{
+    return &db_list;
+}
 
 
 w_err_t db_entry_create(char *dbname,w_uint16_t attr)
 {
+    dlist_s *dblist;
     db_entry_s *entry;
     entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry == NULL,ERR_INVALID_PARAM);
@@ -59,14 +64,30 @@ w_err_t db_entry_create(char *dbname,w_uint16_t attr)
     entry->hash = get_db_hash(entry->name);
     WIND_ASSERT_RETURN(entry->hash > 0,ERR_INVALID_PARAM);
     entry->tb_count = 0;
-    dlist_insert_tail(&db_list,&entry->dbnode);
+    dblist = get_db_list();
+    dlist_insert_tail(dblist,&entry->dbnode);
     return B_TRUE;
 }
 
 w_err_t db_entry_destroy(char *dbname)
 {
+    dlist_s *dblist;
+    dnode_s *node;
+    tb_entry_s *tentry;
     db_entry_s *entry = db_get_byname(dbname);
     WIND_ASSERT_RETURN(entry != NULL,ERR_INVALID_PARAM);
+    dblist = get_db_list();
+    dlist_remove(dblist,&entry->dbnode);
+    node = dlist_head(&entry->tblist);
+    if(node != NULL)
+    {
+        foreach_node(node,&entry->tblist)
+        {
+            node = dlist_remove_head(&entry->tblist);
+            tentry = DLIST_OBJ(node,tb_entry_s,tbnode);
+            tb_entry_destroy(tentry->tbname);
+        }
+    }
     wind_memset(entry,0,sizeof(db_entry_s));
     db_free(entry);
     return ERR_OK;
@@ -74,11 +95,13 @@ w_err_t db_entry_destroy(char *dbname)
 
 db_entry_s *db_get_byname(char *dbname)
 {
+    dlist_s *dblist;
     db_entry_s *entry;
     dnode_s *dnode;
     w_int32_t hash = get_db_hash(dbname);
     WIND_ASSERT_RETURN(hash > 0,NULL);
-    foreach_node(dnode,&db_list)
+    dblist = get_db_list();
+    foreach_node(dnode,dblist)
     {
         entry = DLIST_OBJ(dnode,db_entry_s,dbnode);
         if(hash != entry->hash)
@@ -140,6 +163,7 @@ w_err_t db_entry_print_info(char *dbname)
     wind_printf("\r\ndb info:\r\n");
     wind_printf("db name:%s\r\n",entry->name);
     wind_printf("table count:%d\r\n",entry->tb_count);
+    return ERR_OK;
 }
 
 w_err_t db_entry_print_data(db_entry_s *entry)
@@ -158,9 +182,11 @@ w_err_t db_entry_print_data(db_entry_s *entry)
 
 w_err_t db_entry_print_db(char *dbname)
 {
+    dlist_s *dblist;
     db_entry_s *entry;
     dnode_s *dnode;
-    foreach_node(dnode,&db_list)
+    dblist = get_db_list();
+    foreach_node(dnode,dblist)
     {
         entry = DLIST_OBJ(dnode,tb_entry_s,tbnode);
         if(wind_strcmp(entry->name,dbname) == 0)
@@ -176,7 +202,9 @@ w_err_t db_entry_print_all(void)
 {
     db_entry_s *entry;
     dnode_s *dnode;
-    foreach_node(dnode,&db_list)
+    dlist_s *dblist;
+    dblist = get_db_list();
+    foreach_node(dnode,dblist)
     {
         entry = DLIST_OBJ(dnode,db_entry_s,dbnode);
         db_entry_print_data(entry);

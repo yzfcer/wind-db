@@ -61,9 +61,9 @@ typedef struct __tb_entry_s tb_entry_s;
 struct __db_entry_s
 {
     w_uint64_t magic;
-    char name[DB_NAME_LEN];
     dnode_s dbnode;
     dlist_s tblist;
+    char name[DB_NAME_LEN];
     w_uint32_t base;//绝对地址
     w_uint16_t attr;
     w_int32_t hash;
@@ -73,17 +73,17 @@ struct __db_entry_s
 struct __tb_entry_s
 {
     w_uint64_t magic;
+    dnode_s tbnode;
+    dlist_s data_list;
     char dbname[DB_NAME_LEN];
     char tbname[TB_NAME_LEN];
     w_uint32_t base;//绝对地址
     db_entry_s *db;
-    dnode_s tbnode;
     
     w_uint32_t entry_size;
     w_uint16_t item_cnt;
     w_int32_t hash;
     
-    dlist_s data_list;
     w_uint16_t data_cnt;
     w_uint16_t data_size;
     //偏移地址

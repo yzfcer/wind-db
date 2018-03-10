@@ -6,8 +6,6 @@
 #include "db_adapter.h"
 #include "db_entry.h"
 
-
-
 w_err_t tb_entry_create(char *tbname,tb_item_info_s *info,w_int32_t item_cnt);
 w_bool_t tb_entry_exist(char *tbname);
 w_err_t tb_entry_destroy(char *tbname);

@@ -38,7 +38,7 @@ void *db_malloc(w_int32_t size)
     return NULL;
 }
 
-void *db_free(void *ptr)
+void db_free(void *ptr)
 {
     w_addr_t *p;
     if(ptr != NULL)
