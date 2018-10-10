@@ -11,28 +11,28 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\adapter\db_adapter.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\comman\wind_dlist.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\comman\wind_string.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\dbcore\db_entry.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\dbcore\db_if.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_entry.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\dbcore\tb_print.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\db_user\db_demo.c" />
-    <ClCompile Include="..\..\..\..\..\..\..\db_user\db_demo1.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\adapter\db_adapter.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\comman\wind_dlist.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\comman\wind_string.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\db\db_entry.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\db\db_if.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\db\tb_entry.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\db\tb_print.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\model\db_demo.c" />
+    <ClCompile Include="..\..\..\..\..\..\..\src\model\db_demo1.c" />
     <ClCompile Include="..\..\..\port\db_port.c" />
     <ClCompile Include="main.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\adapter\db_adapter.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\comman\wind_dlist.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\comman\wind_string.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_entry.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_if.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\dbcore\db_private.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\dbcore\tb_entry.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\db_user\db_demo.h" />
-    <ClInclude Include="..\..\..\..\..\..\..\db_user\db_demo1.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\adapter\db_adapter.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\comman\wind_dlist.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\comman\wind_string.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\db\db.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\db\db_entry.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\db\db_if.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\db\tb_entry.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\model\db_demo.h" />
+    <ClInclude Include="..\..\..\..\..\..\..\src\model\db_demo1.h" />
     <ClInclude Include="..\..\..\port\db_config.h" />
     <ClInclude Include="..\..\..\port\db_port.h" />
     <ClInclude Include="..\..\..\port\wind_type.h" />
@@ -64,7 +64,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(ProjectDir)../../../../../../../comman;$(ProjectDir)../../../../../../../dbcore;$(ProjectDir)../../../../../../../db_user;$(ProjectDir)../../../../../../../adapter;$(ProjectDir)../../../port;$(IncludePath)</IncludePath>
+    <IncludePath>$(ProjectDir)../../../../../../../src/comman;$(ProjectDir)../../../../../../../src/db;$(ProjectDir)../../../../../../../src/model;$(ProjectDir)../../../../../../../src/adapter;$(ProjectDir)../../../port;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
